@@ -210,6 +210,17 @@ while True:
                 if entrada.lower() == "apis":
                     ver_apis()
                     continue
+                if entrada.lower().startswith("ejecutar json"):
+                    if "autoeditor" in MODULOS:
+                        resultado = MODULOS["autoeditor"].ejecutar("autoeditar", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("git"):
+                    if "git_manager" in MODULOS:
+                        resultado = MODULOS["git_manager"].ejecutar("git", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
 
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
