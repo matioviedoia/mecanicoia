@@ -210,9 +210,22 @@ while True:
                 if entrada.lower() == "apis":
                     ver_apis()
                     continue
+
                 if entrada.lower().startswith("ejecutar json"):
                     if "autoeditor" in MODULOS:
                         resultado = MODULOS["autoeditor"].ejecutar("autoeditar", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("reparar"):
+                    if "reparador" in MODULOS:
+                        resultado = MODULOS["reparador"].ejecutar("reparar", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("analizar"):
+                    if "analizador" in MODULOS:
+                        resultado = MODULOS["analizador"].ejecutar("analizar", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
