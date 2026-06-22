@@ -110,7 +110,7 @@ def preguntar(prompt, api="auto", modo_consenso=False):
 
             elif nombre == "zai":
                 headers = {
-                    "Authorization": config["key"],
+                    "Authorization": f"Bearer {config['key']}",
                     "Content-Type": "application/json"
                 }
                 body = {
@@ -118,12 +118,7 @@ def preguntar(prompt, api="auto", modo_consenso=False):
                     "messages": [{"role": "user", "content": prompt}],
                     "max_tokens": 2000
                 }
-                r = requests.post(
-                    "https://open.bigmodel.cn/api/paas/v4/chat/completions",
-                    headers=headers,
-                    json=body,
-                    timeout=30
-                )
+                r = requests.post("https://api.z.ai/v1/chat/completions", headers=headers, json=body, timeout=30)
                 resultados[nombre] = r.json()["choices"][0]["message"]["content"]
 
             elif nombre == "ollama":
@@ -217,7 +212,6 @@ while True:
             print(Fore.WHITE + "  'analizar ia <ruta>'   -> analizar con IA")
             print(Fore.WHITE + "  'reparar <ruta>'       -> reparar archivo con IA")
             print(Fore.WHITE + "  'revertir <archivo>'   -> restaurar backup")
-            print(Fore.WHITE + "  'explorar <ruta>'      -> navegar carpetas")
             print(Fore.WHITE + "  'git estado/push/log'  -> operaciones git")
             print(Fore.WHITE + "  'apis'                 -> ver estado APIs")
             print(Fore.WHITE + "  'menu'                 -> volver al menu")
@@ -264,15 +258,15 @@ while True:
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
-                if entrada.lower().startswith("explorar"):
-                    if "explorador" in MODULOS:
-                        resultado = MODULOS["explorador"].ejecutar("explorar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
-
                 if entrada.lower().startswith("git"):
                     if "git_manager" in MODULOS:
                         resultado = MODULOS["git_manager"].ejecutar("git", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("explorar"):
+                    if "explorador" in MODULOS:
+                        resultado = MODULOS["explorador"].ejecutar("explorar", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 

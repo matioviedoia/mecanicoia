@@ -1,0 +1,532 @@
+
+============================================================
+❌ ERROR FATAL en MECANICO IA
+📅 2026-06-22 13:01:43
+============================================================
+Tipo: ModuleNotFoundError
+Mensaje: No module named 'config.settings'; 'config' is not a package
+============================================================
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\main.py", line 57, in <module>
+    from core.orchestrator import ejecutar
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\orchestrator.py", line 10, in <module>
+    from core.steps.cargar.cargar_modulos import cargar as cargar_modulos
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\cargar\cargar_modulos.py", line 9, in <module>
+    from config.settings import BASE_DIR
+ModuleNotFoundError: No module named 'config.settings'; 'config' is not a package
+============================================================
+
+2026-06-22 13:05:16,486 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:05:16
+CONTEXTO: Carga de módulo: autoeditor
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:05:16,516 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:05:16
+CONTEXTO: Carga de módulo: explorador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:05:16,519 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:05:16
+CONTEXTO: Carga de módulo: git_manager
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:05:16,521 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:05:16
+CONTEXTO: Carga de módulo: reparador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:05:16,523 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:05:16
+CONTEXTO: Carga de módulo: revertir
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:06:41,188 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:06:41
+CONTEXTO: consultar — agotados 2 reintentos
+ERROR: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\utils\retry\retry.py", line 43, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\api_clients\ollama_client.py", line 25, in consultar
+    respuesta = ol.chat(
+                ^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 387, in chat
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 199, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 145, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-06-22 13:06:41,205 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:06:41
+CONTEXTO: API: ollama
+ERROR: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\procesar\router_apis.py", line 71, in preguntar
+    resultados[nombre] = consultar(prompt, config)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\utils\retry\retry.py", line 43, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\api_clients\ollama_client.py", line 25, in consultar
+    respuesta = ol.chat(
+                ^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 387, in chat
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 199, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 145, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-06-22 13:06:41,216 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:06:41
+CONTEXTO: Modo manual
+ERROR: [Router] Todas las APIs fallaron | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\procesar\modo_manual.py", line 96, in _procesar_entrada_usuario
+    respuesta = preguntar(generar(entrada), api=api_actual)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\procesar\router_apis.py", line 77, in preguntar
+    raise ValueError("[Router] Todas las APIs fallaron")
+ValueError: [Router] Todas las APIs fallaron
+2026-06-22 13:07:34,288 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:07:34
+CONTEXTO: Carga de módulo: autoeditor
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:07:34,301 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:07:34
+CONTEXTO: Carga de módulo: explorador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:07:34,304 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:07:34
+CONTEXTO: Carga de módulo: git_manager
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:07:34,306 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:07:34
+CONTEXTO: Carga de módulo: reparador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:07:34,308 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:07:34
+CONTEXTO: Carga de módulo: revertir
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:13:42,207 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:42
+CONTEXTO: Carga de módulo: autoeditor
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:13:42,216 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:42
+CONTEXTO: Carga de módulo: explorador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:13:42,220 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:42
+CONTEXTO: Carga de módulo: git_manager
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:13:42,223 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:42
+CONTEXTO: Carga de módulo: reparador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:13:42,226 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:42
+CONTEXTO: Carga de módulo: revertir
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:13:57,381 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:57
+CONTEXTO: consultar — agotados 2 reintentos
+ERROR: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\utils\retry\retry.py", line 43, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\api_clients\ollama_client.py", line 25, in consultar
+    respuesta = ol.chat(
+                ^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 387, in chat
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 199, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 145, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-06-22 13:13:57,385 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:57
+CONTEXTO: API: ollama
+ERROR: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\procesar\router_apis.py", line 71, in preguntar
+    resultados[nombre] = consultar(prompt, config)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\utils\retry\retry.py", line 43, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\api_clients\ollama_client.py", line 25, in consultar
+    respuesta = ol.chat(
+                ^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 387, in chat
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 199, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\site-packages\ollama\_client.py", line 145, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-06-22 13:13:57,388 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:13:57
+CONTEXTO: Modo manual
+ERROR: [Router] Todas las APIs fallaron | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\procesar\modo_manual.py", line 96, in _procesar_entrada_usuario
+    respuesta = preguntar(generar(entrada), api=api_actual)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\core\steps\procesar\router_apis.py", line 77, in preguntar
+    raise ValueError("[Router] Todas las APIs fallaron")
+ValueError: [Router] Todas las APIs fallaron
+2026-06-22 13:15:58,527 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:15:58
+CONTEXTO: Carga de módulo: autoeditor
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:15:58,540 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:15:58
+CONTEXTO: Carga de módulo: explorador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:15:58,542 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:15:58
+CONTEXTO: Carga de módulo: git_manager
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:15:58,545 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:15:58
+CONTEXTO: Carga de módulo: reparador
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'
+2026-06-22 13:15:58,548 | ERROR | 
+==================================================
+FECHA: 2026-06-22 13:15:58
+CONTEXTO: Carga de módulo: revertir
+ERROR: No module named 'modulos' | file_logger.py:63
+Traceback (most recent call last):
+  File "C:\IA\AGENTE\mecanico beta prueva\mecanico_v2\modules\plugin_manager\cargar_modulos.py", line 36, in cargar_modulos
+    mod = importlib.import_module(f"modulos.{nombre}")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mat\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1126, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1140, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'modulos'

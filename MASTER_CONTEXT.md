@@ -8,24 +8,35 @@ Este archivo contiene toda la información necesaria para que cualquier IA entie
 📄 .gitignore
 📁 apis/
 📄 config.py
-📄 mecanico.py
+📁 logs/
+  📁 errors/
+    📄 errores.log
+📄 MANUAL_MECANICO.md
+📄 mecanico (1).py
 📁 memoria/
   📁 backups/
     📄 analizador.py.backup_20260620_082455
     📄 analizador.py.backup_20260620_083118
     📄 analizador.py.backup_20260620_083128
     📄 autoeditor.py.backup_20260620_083034
+    📄 config.py.backup_20260622_165457
+    📄 config.py.backup_20260622_165527
     📄 mecanico.py.backup_20260620_080934
     📄 mecanico.py.backup_20260620_083412
+    📄 mecanico.py.backup_20260621_212255
+    📄 mecanico.py.backup_20260622_165603
   📁 errores/
     📄 errores.log
   📁 sesiones/
 📁 modulos/
   📄 analizador.py
   📄 autoeditor.py
+  📄 explorador.py
   📄 git_manager.py
   📄 reparador.py
   📄 revertir.py
+📁 Nueva carpeta/
+  📄 mecanico.py
 📁 proyectos/
 📄 scanner_maestro.py
 ```
