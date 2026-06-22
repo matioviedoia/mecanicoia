@@ -192,16 +192,7 @@ while True:
             modo_actual = "manual"
             api_actual = "auto"
             print(Fore.GREEN + "\nModo Manual activado.")
-            print(Fore.WHITE + "Comandos disponibles:")
-            print(Fore.WHITE + "  'ejecutar json {...}'  -> autoeditor con IA")
-            print(Fore.WHITE + "  'analizar <ruta>'      -> analizar archivo o proyecto")
-            print(Fore.WHITE + "  'analizar ia <ruta>'   -> analizar con IA")
-            print(Fore.WHITE + "  'reparar <ruta>'       -> reparar archivo con IA")
-            print(Fore.WHITE + "  'revertir <archivo>'   -> restaurar backup")
-            print(Fore.WHITE + "  'git estado/push/log'  -> operaciones git")
-            print(Fore.WHITE + "  'apis'                 -> ver estado APIs")
-            print(Fore.WHITE + "  'menu'                 -> volver al menu")
-            print(Fore.WHITE + "  'salir'                -> terminar")
+            print(Fore.WHITE + "Comandos: 'menu' volver | 'apis' ver estado | 'salir' terminar")
             print(Fore.CYAN + "-" * 55)
 
             while True:
@@ -229,12 +220,6 @@ while True:
                 if entrada.lower().startswith("reparar"):
                     if "reparador" in MODULOS:
                         resultado = MODULOS["reparador"].ejecutar("reparar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
-
-                if entrada.lower().startswith("revertir"):
-                    if "revertir" in MODULOS:
-                        resultado = MODULOS["revertir"].ejecutar("revertir", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 

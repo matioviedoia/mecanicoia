@@ -1,3 +1,6 @@
+# Este módulo analiza código Python en busca de errores, advertencias y problemas de rendimiento, 
+# y ofrece opciones para analizar archivos y proyectos utilizando técnicas de inteligencia artificial.
+
 import os
 import ast
 import json
