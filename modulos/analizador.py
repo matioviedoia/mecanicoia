@@ -41,7 +41,7 @@ def analizar_python(ruta: str) -> str:
     if errores:
         resumen += "\nERRORES:\n" + "\n".join(errores)
     if advertencias:
-        resumen += "\nADVERTENCIAS:\n" + "\n".join(advertencias[:10])
+        resumen += "\nADVERTENCIAS:\n" + "\n".join(advertencias)
     return resumen
 
 def analizar_proyecto(carpeta: str) -> str:
@@ -109,4 +109,15 @@ def ejecutar(accion: str, texto: str) -> str:
             return "ERROR: Especifica la ruta del archivo. Ej: analizar archivo C:/ruta/archivo.py"
         return analizar_python(ruta)
     else:
-        return "ERROR: Acción no válida. Ej: analizar proyecto, analizar archivo, analizar ia"
+        return "ERROR: Acción no reconocida. Utiliza 'proyecto', 'ia' o 'archivo'."
+
+def main():
+    while True:
+        accion = input("Ingrese una acción (salir para finalizar): ")
+        if accion.lower() == "salir":
+            break
+        resultado = ejecutar(accion, accion)
+        print(resultado)
+
+if __name__ == "__main__":
+    main()
