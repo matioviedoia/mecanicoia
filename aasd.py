@@ -5,7 +5,6 @@ import datetime
 import traceback
 import importlib
 import requests
-import subprocess
 from colorama import init, Fore, Style
 
 init(autoreset=True)
@@ -33,29 +32,6 @@ def guardar_error(error, contexto=""):
         pass
     print(Fore.RED + f"\n[ERROR] {error}")
     print(Fore.YELLOW + f"[LOG] Guardado en {LOG_FILE}")
-
-def iniciar_ollama():
-    try:
-        r = requests.get("http://localhost:11434", timeout=2)
-        print(Fore.GREEN + "  OK Ollama ya estaba corriendo")
-        return True
-    except Exception:
-        pass
-    try:
-        print(Fore.YELLOW + "  Iniciando Ollama...")
-        subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
-        )
-        time.sleep(3)
-        r = requests.get("http://localhost:11434", timeout=3)
-        print(Fore.GREEN + "  OK Ollama iniciado")
-        return True
-    except Exception as e:
-        print(Fore.RED + f"  ERROR Ollama no pudo iniciarse: {e}")
-        return False
 
 # ============================================
 # CARGA DE MODULOS
@@ -211,9 +187,7 @@ print()
 print(Fore.CYAN + "=" * 55)
 print(Fore.CYAN + "   MECANICO IA arrancando...")
 print(Fore.CYAN + "=" * 55)
-print(Fore.WHITE + "\nVerificando Ollama:")
-iniciar_ollama()
-print(Fore.WHITE + "\nCargando modulos:\n")
+print(Fore.WHITE + "Cargando modulos:\n")
 cargar_modulos()
 
 historial = []
@@ -238,17 +212,16 @@ while True:
             api_actual = "auto"
             print(Fore.GREEN + "\nModo Manual activado.")
             print(Fore.WHITE + "Comandos disponibles:")
-            print(Fore.WHITE + "  'ejecutar json {...}'       -> autoeditor con IA")
-            print(Fore.WHITE + "  'analizar <ruta>'           -> analizar archivo o proyecto")
-            print(Fore.WHITE + "  'analizar ia <ruta>'        -> analizar con IA")
-            print(Fore.WHITE + "  'leer <ruta> y <pregunta>'  -> leer archivo y preguntar a IA")
-            print(Fore.WHITE + "  'reparar <ruta>'            -> reparar archivo con IA")
-            print(Fore.WHITE + "  'revertir <archivo>'        -> restaurar backup")
-            print(Fore.WHITE + "  'explorar <ruta>'           -> navegar carpetas")
-            print(Fore.WHITE + "  'git estado/push/log'       -> operaciones git")
-            print(Fore.WHITE + "  'apis'                      -> ver estado APIs")
-            print(Fore.WHITE + "  'menu'                      -> volver al menu")
-            print(Fore.WHITE + "  'salir'                     -> terminar")
+            print(Fore.WHITE + "  'ejecutar json {...}'  -> autoeditor con IA")
+            print(Fore.WHITE + "  'analizar <ruta>'      -> analizar archivo o proyecto")
+            print(Fore.WHITE + "  'analizar ia <ruta>'   -> analizar con IA")
+            print(Fore.WHITE + "  'reparar <ruta>'       -> reparar archivo con IA")
+            print(Fore.WHITE + "  'revertir <archivo>'   -> restaurar backup")
+            print(Fore.WHITE + "  'explorar <ruta>'      -> navegar carpetas")
+            print(Fore.WHITE + "  'git estado/push/log'  -> operaciones git")
+            print(Fore.WHITE + "  'apis'                 -> ver estado APIs")
+            print(Fore.WHITE + "  'menu'                 -> volver al menu")
+            print(Fore.WHITE + "  'salir'                -> terminar")
             print(Fore.CYAN + "-" * 55)
 
             while True:
@@ -288,12 +261,6 @@ while True:
                 if entrada.lower().startswith("analizar"):
                     if "analizador" in MODULOS:
                         resultado = MODULOS["analizador"].ejecutar("analizar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
-
-                if entrada.lower().startswith("leer"):
-                    if "lector_contexto" in MODULOS:
-                        resultado = MODULOS["lector_contexto"].ejecutar("leer", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
