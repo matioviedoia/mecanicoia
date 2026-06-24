@@ -50,7 +50,7 @@ def iniciar_ollama():
             creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
         )
         time.sleep(3)
-        requests.get("http://localhost:11434", timeout=3)
+        r = requests.get("http://localhost:11434", timeout=3)
         print(Fore.GREEN + "  OK Ollama iniciado")
         return True
     except Exception as e:
@@ -171,10 +171,10 @@ def preguntar(prompt, api="auto", modo_consenso=False):
         return list(resultados.values())[0]
 
 # ============================================
-# MENUS
+# MENU
 # ============================================
 
-def mostrar_menu_principal():
+def mostrar_menu():
     print()
     print(Fore.CYAN + "=" * 55)
     print(Fore.CYAN + "   MECANICO IA - Agente Reparador")
@@ -183,41 +183,8 @@ def mostrar_menu_principal():
     print(Fore.WHITE + "  2. Modo Auto      - MECANICO trabaja solo")
     print(Fore.WHITE + "  3. Modo Consenso  - todas las APIs juntas")
     print(Fore.WHITE + "  4. Ver APIs       - estado de las APIs")
-    print(Fore.WHITE + "  5. Cambiar API    - elegir con que IA trabajar")
     print(Fore.WHITE + "  s. Salir")
     print(Fore.CYAN + "=" * 55)
-
-def mostrar_menu_apis():
-    from config import APIS
-    print()
-    print(Fore.CYAN + "=" * 55)
-    print(Fore.CYAN + "   Elegir API activa")
-    print(Fore.CYAN + "=" * 55)
-    print(Fore.WHITE + "  0. Auto (prioridad: groq > gemini > cerebras > zai > ollama)")
-    apis = list(APIS.items())
-    for i, (nombre, config) in enumerate(apis, 1):
-        tiene_key = bool(config["key"]) or nombre == "ollama"
-        estado = Fore.GREEN + "OK" if (config["activa"] and tiene_key) else Fore.RED + "OFF"
-        print(f"  {i}. {estado} {nombre:<12} {config['modelo']}")
-    print(Fore.CYAN + "=" * 55)
-    return apis
-
-def elegir_api():
-    apis = mostrar_menu_apis()
-    opcion = input(Fore.YELLOW + "Elegi 0 para auto o 1-" + str(len(apis)) + ": ").strip()
-    if opcion == "0":
-        print(Fore.GREEN + "\nAPI: Auto")
-        return "auto"
-    try:
-        idx = int(opcion) - 1
-        if 0 <= idx < len(apis):
-            nombre = apis[idx][0]
-            print(Fore.GREEN + f"\nAPI seleccionada: {nombre}")
-            return nombre
-    except Exception:
-        pass
-    print(Fore.RED + "Opcion invalida, usando auto")
-    return "auto"
 
 def ver_apis():
     from config import APIS
@@ -229,14 +196,12 @@ def ver_apis():
         print(f"  {estado} {nombre:<12} modelo: {config['modelo']}")
     print()
 
-def hacer_prompt(entrada, api_actual):
-    api_info = f"API activa: {api_actual}" if api_actual != "auto" else "API: auto"
-    return (
-        "Sos MECANICO, un agente IA especializado en analizar, reparar y mejorar codigo.\n"
-        "Siempre respondes en espanol. Sos directo y tecnico.\n"
-        f"Fecha actual: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')} - {api_info}\n\n"
-        f"Usuario: {entrada}"
-    )
+def hacer_prompt(entrada):
+    return f"""Sos MECANICO, un agente IA especializado en analizar, reparar y mejorar codigo.
+Siempre respondes en espanol. Sos directo y tecnico.
+Fecha actual: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}
+
+Usuario: {entrada}"""
 
 # ============================================
 # ARRANQUE
@@ -261,26 +226,34 @@ api_actual = "auto"
 
 while True:
     try:
-        mostrar_menu_principal()
-        print(Fore.YELLOW + f"  [API activa: {api_actual}]")
-        opcion = input(Fore.YELLOW + "Elegi 1, 2, 3, 4, 5 o s: ").strip().lower()
+        mostrar_menu()
+        opcion = input(Fore.YELLOW + "Elegi 1, 2, 3, 4 o s: ").strip().lower()
 
         if opcion == "s":
             print(Fore.CYAN + "Hasta luego.")
             break
 
-        elif opcion == "5":
-            api_actual = elegir_api()
-
         elif opcion == "1":
             modo_actual = "manual"
-            print(Fore.GREEN + f"\nModo Manual activado. API: {api_actual}")
-            print(Fore.WHITE + "Comandos: 'api' cambiar API | 'apis' ver estado | 'menu' volver | 'salir' terminar")
+            api_actual = "auto"
+            print(Fore.GREEN + "\nModo Manual activado.")
+            print(Fore.WHITE + "Comandos disponibles:")
+            print(Fore.WHITE + "  'ejecutar json {...}'       -> autoeditor con IA")
+            print(Fore.WHITE + "  'analizar <ruta>'           -> analizar archivo o proyecto")
+            print(Fore.WHITE + "  'analizar ia <ruta>'        -> analizar con IA")
+            print(Fore.WHITE + "  'leer <ruta> y <pregunta>'  -> leer archivo y preguntar a IA")
+            print(Fore.WHITE + "  'reparar <ruta>'            -> reparar archivo con IA")
+            print(Fore.WHITE + "  'revertir <archivo>'        -> restaurar backup")
+            print(Fore.WHITE + "  'explorar <ruta>'           -> navegar carpetas")
+            print(Fore.WHITE + "  'git estado/push/log'       -> operaciones git")
+            print(Fore.WHITE + "  'apis'                      -> ver estado APIs")
+            print(Fore.WHITE + "  'menu'                      -> volver al menu")
+            print(Fore.WHITE + "  'salir'                     -> terminar")
             print(Fore.CYAN + "-" * 55)
 
             while True:
                 try:
-                    entrada = input(Fore.YELLOW + f"\n[{api_actual}] Vos: ").strip()
+                    entrada = input(Fore.YELLOW + "\nVos: ").strip()
                 except KeyboardInterrupt:
                     break
 
@@ -292,9 +265,6 @@ while True:
                     sys.exit(0)
                 if entrada.lower() == "apis":
                     ver_apis()
-                    continue
-                if entrada.lower() == "api":
-                    api_actual = elegir_api()
                     continue
 
                 if entrada.lower().startswith("ejecutar json"):
@@ -342,16 +312,18 @@ while True:
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()
-                    respuesta = preguntar(hacer_prompt(entrada, api_actual), api=api_actual)
+                    respuesta = preguntar(hacer_prompt(entrada), api=api_actual)
                     fin = round(time.time() - inicio, 2)
-                    print(Fore.GREEN + f"\rMECANICO [{api_actual}] ({fin}s): " + Fore.WHITE + respuesta)
+                    print(Fore.GREEN + f"\rMECANICO ({fin}s): " + Fore.WHITE + respuesta)
                 except Exception as e:
                     guardar_error(str(e), "Modo manual")
 
         elif opcion == "2":
+            modo_actual = "auto"
             print(Fore.GREEN + "\nModo Auto activado. (En construccion)")
 
         elif opcion == "3":
+            modo_actual = "consenso"
             print(Fore.GREEN + "\nModo Consenso activado.")
             try:
                 entrada = input(Fore.YELLOW + "\nPregunta para todas las APIs: ").strip()
@@ -360,7 +332,7 @@ while True:
             if entrada:
                 try:
                     print(Fore.WHITE + "Consultando todas las APIs...\n")
-                    resultados = preguntar(hacer_prompt(entrada, "consenso"), modo_consenso=True)
+                    resultados = preguntar(hacer_prompt(entrada), modo_consenso=True)
                     for api, resp in resultados.items():
                         print(Fore.CYAN + f"\n[{api.upper()}]:")
                         print(Fore.WHITE + resp)
