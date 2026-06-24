@@ -109,15 +109,10 @@ def ejecutar(accion: str, texto: str) -> str:
             return "ERROR: Especifica la ruta del archivo. Ej: analizar archivo C:/ruta/archivo.py"
         return analizar_python(ruta)
     else:
-        return "ERROR: Acción no reconocida. Utiliza 'proyecto', 'ia' o 'archivo'."
+        return "ERROR: Acción no reconocida. Opciones: proyecto, ia, archivo"
 
-def main():
-    while True:
-        accion = input("Ingrese una acción (salir para finalizar): ")
-        if accion.lower() == "salir":
-            break
-        resultado = ejecutar(accion, accion)
-        print(resultado)
-
+# Uso ejemplo
 if __name__ == "__main__":
-    main()
+    print(ejecutar("accion", "analizar proyecto C:/IA/AGENTE/MECANICO"))
+    print(ejecutar("accion", "analizar ia C:/rito/archivo.py"))
+    print(ejecutar("accion", "analizar archivo C:/rito/archivo.py"))
