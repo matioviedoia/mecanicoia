@@ -103,8 +103,15 @@ def ejecutar(accion: str, texto: str) -> str:
             return "ERROR: Especifica la ruta del archivo. Ej: analizar ia C:/ruta/archivo.py"
         from mecanico import preguntar
         return analizar_con_ia(ruta, preguntar)
-    else:
+    elif "archivo" in t:
         ruta = palabras[-1] if len(palabras) > 1 else ""
         if not ruta or not os.path.exists(ruta):
             return "ERROR: Especifica la ruta del archivo. Ej: analizar C:/ruta/archivo.py"
         return analizar_python(ruta)
+    else:
+        return "ERROR: Acción no válida. Opciones: proyecto, ia, archivo"
+
+# Ejemplo de uso
+print(ejecutar("accion", "proyecto C:/ruta/proyecto"))
+print(ejecutar("accion", "ia C:/ruta/archivo.py"))
+print(ejecutar("accion", "archivo C:/ruta/archivo.py"))
