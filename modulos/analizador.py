@@ -13,7 +13,7 @@ def leer_archivo(ruta: str) -> str:
         with open(ruta, "r", encoding="utf-8", errors="ignore") as f:
             return f.read()
     except Exception as e:
-        return f"ERROR: {e}"
+        return f"ERROR: {str(e)}"
 
 def analizar_python(ruta: str) -> str:
     """Analiza un archivo Python en busca de errores y advertencias."""
@@ -58,7 +58,7 @@ def analizar_proyecto(carpeta: str) -> str:
                 ruta = os.path.join(raiz, archivo)
                 total_archivos += 1
                 analisis = analizar_python(ruta)
-                if "Errores: 0" not in analisis:
+                if "Errores: 0" not in analisis and not analisis.startswith("ERROR"):
                     total_errores += 1
                     reporte.append(analisis)
     resumen = f"ANÁLISIS DE PROYECTO: {carpeta}\n"
@@ -106,12 +106,7 @@ def ejecutar(accion: str, texto: str) -> str:
     elif "archivo" in t:
         ruta = palabras[-1] if len(palabras) > 1 else ""
         if not ruta or not os.path.exists(ruta):
-            return "ERROR: Especifica la ruta del archivo. Ej: analizar C:/ruta/archivo.py"
+            return "ERROR: Especifica la ruta del archivo. Ej: analizar archivo C:/ruta/archivo.py"
         return analizar_python(ruta)
     else:
-        return "ERROR: Acción no válida. Opciones: proyecto, ia, archivo"
-
-# Ejemplo de uso
-print(ejecutar("accion", "proyecto C:/ruta/proyecto"))
-print(ejecutar("accion", "ia C:/ruta/archivo.py"))
-print(ejecutar("accion", "archivo C:/ruta/archivo.py"))
+        return "ERROR: Acción no válida. Ej: analizar proyecto, analizar archivo, analizar ia"
