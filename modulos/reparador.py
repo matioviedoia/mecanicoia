@@ -49,19 +49,34 @@ def extraer_codigo(texto):
             return texto[inicio:fin].strip()
     return texto.strip()
 
-def hacer_prompt_reparacion(ruta, codigo):
-    return (
-        "Sos un experto en Python. Analizá este codigo y devolvé SOLO el codigo corregido.\n"
-        "Corregi todos los errores, bugs y problemas de calidad.\n"
-        "Mantene la funcionalidad original intacta.\n"
-        "IMPORTANTE: Devolvé SOLO el codigo Python completo entre triple backticks.\n"
-        "No agregues explicaciones ni comentarios fuera del codigo.\n\n"
-        f"Archivo: {ruta}\n\n"
-        f"```python\n{codigo[:4000]}\n```\n\n"
-        "Devolvé SOLO el codigo corregido:"
-    )
+def intentar_con_apis(prompt, preguntar_fn, ruta):
+    from config import APIS
+    apis_orden = ["groq", "gemini", "cerebras", "zai", "ollama"]
+    apis_activas = [a for a in apis_orden if a in APIS and APIS[a]["activa"] and (APIS[a]["key"] or a == "ollama")]
 
-def reparar_archivo(ruta, preguntar_fn):
+    for api in apis_activas:
+        try:
+            respuesta = preguntar_fn(prompt, api=api)
+            codigo_candidato = extraer_codigo(respuesta)
+            if not codigo_candidato:
+                continue
+            if ruta.endswith(".py"):
+                valido, msg = validar_python(codigo_candidato)
+                if not valido:
+                    continue
+            return codigo_candidato, api
+        except Exception:
+            continue
+    return None, None
+
+def guardar_git(mensaje):
+    try:
+        from modulos import git_manager
+        return git_manager.commit_automatico(mensaje)
+    except Exception:
+        return None
+
+def procesar(ruta, preguntar_fn, modo="reparar"):
     if not os.path.exists(ruta):
         return f"ERROR: Archivo no encontrado: {ruta}"
 
@@ -70,68 +85,63 @@ def reparar_archivo(ruta, preguntar_fn):
         return codigo_original
 
     log = []
-    log.append(f"Reparando: {ruta}")
+    log.append(f"{'Reparando' if modo == 'reparar' else 'Mejorando'}: {ruta}")
 
-    # Intentar con hasta 3 APIs diferentes
-    from config import APIS
-    apis_orden = ["groq", "gemini", "cerebras", "zai", "ollama"]
-    apis_activas = [a for a in apis_orden if a in APIS and APIS[a]["activa"] and (APIS[a]["key"] or a == "ollama")]
+    if modo == "reparar":
+        prompt = (
+            "Sos un experto en Python. Analizá este codigo y devolvé SOLO el codigo corregido.\n"
+            "Corregi todos los errores, bugs y problemas de calidad.\n"
+            "Mantene la funcionalidad original intacta.\n"
+            "IMPORTANTE: Devolvé SOLO el codigo Python completo entre triple backticks.\n"
+            "No agregues explicaciones fuera del codigo.\n\n"
+            f"Archivo: {ruta}\n\n"
+            f"```python\n{codigo_original[:4000]}\n```\n\n"
+            "Devolvé SOLO el codigo corregido:"
+        )
+    else:
+        # Primero analizar para obtener sugerencias
+        log.append("Analizando para obtener sugerencias de mejora...")
+        prompt_analisis = (
+            "Analizá este codigo Python y listá de forma concisa las mejoras que aplicarías.\n"
+            "Sé específico y técnico.\n\n"
+            f"```python\n{codigo_original[:3000]}\n```"
+        )
+        sugerencias, _ = intentar_con_apis(prompt_analisis, preguntar_fn, "")
+        if not sugerencias:
+            sugerencias = "mejorar manejo de errores, eliminar codigo duplicado, agregar documentacion"
+        log.append(f"Sugerencias: {sugerencias[:200]}...")
 
-    codigo_nuevo = None
-    api_usada = None
+        prompt = (
+            "Sos un experto en Python. Mejorá este codigo aplicando las siguientes sugerencias.\n"
+            "Mantene la funcionalidad original pero mejora la calidad, estructura y rendimiento.\n"
+            "IMPORTANTE: Devolvé SOLO el codigo Python completo mejorado entre triple backticks.\n"
+            "No agregues explicaciones fuera del codigo.\n\n"
+            f"Sugerencias a aplicar:\n{sugerencias}\n\n"
+            f"Archivo: {ruta}\n\n"
+            f"```python\n{codigo_original[:3000]}\n```\n\n"
+            "Devolvé SOLO el codigo mejorado:"
+        )
 
-    for api in apis_activas:
-        log.append(f"Consultando {api}...")
-        try:
-            respuesta = preguntar_fn(hacer_prompt_reparacion(ruta, codigo_original), api=api)
-            codigo_candidato = extraer_codigo(respuesta)
-
-            if not codigo_candidato:
-                log.append(f"  {api}: no devolvio codigo")
-                continue
-
-            if ruta.endswith(".py"):
-                valido, msg = validar_python(codigo_candidato)
-                if not valido:
-                    log.append(f"  {api}: codigo invalido - {msg}")
-                    continue
-                log.append(f"  {api}: codigo valido")
-
-            codigo_nuevo = codigo_candidato
-            api_usada = api
-            break
-
-        except Exception as e:
-            log.append(f"  {api}: error - {e}")
-            continue
+    log.append("Consultando APIs...")
+    codigo_nuevo, api_usada = intentar_con_apis(prompt, preguntar_fn, ruta)
 
     if not codigo_nuevo:
         return "\n".join(log) + "\nERROR: Ninguna API pudo generar codigo valido"
 
-    log.append(f"Codigo valido generado por {api_usada}, haciendo backup...")
+    log.append(f"Codigo valido generado por {api_usada}")
+
     backup = hacer_backup(ruta)
     if backup:
         log.append(f"Backup: {backup}")
 
-    try:
-        from modulos import git_manager
-        git_result = git_manager.commit_automatico(f"MECANICO pre-reparacion: {os.path.basename(ruta)}")
-        log.append(f"Git: {git_result}")
-    except Exception:
-        pass
+    guardar_git(f"MECANICO pre-{modo}: {os.path.basename(ruta)}")
 
     ok = escribir_archivo(ruta, codigo_nuevo)
     if not ok:
         return "\n".join(log) + "\nERROR: No se pudo escribir el archivo"
 
-    log.append("Archivo reparado exitosamente")
-
-    try:
-        from modulos import git_manager
-        git_result = git_manager.commit_automatico(f"MECANICO reparacion [{api_usada}]: {os.path.basename(ruta)}")
-        log.append(f"Git commit: {git_result}")
-    except Exception:
-        pass
+    log.append(f"Archivo {modo}do exitosamente")
+    guardar_git(f"MECANICO {modo} [{api_usada}]: {os.path.basename(ruta)}")
 
     log.append(f"Lineas originales: {len(codigo_original.splitlines())}")
     log.append(f"Lineas nuevas: {len(codigo_nuevo.splitlines())}")
@@ -146,4 +156,8 @@ def ejecutar(accion, texto):
         return f"ERROR: Especifica la ruta. Ej: reparar C:/ruta/archivo.py"
 
     from mecanico import preguntar
-    return reparar_archivo(ruta, preguntar)
+
+    if accion == "mejorar":
+        return procesar(ruta, preguntar, modo="mejorar")
+    else:
+        return procesar(ruta, preguntar, modo="reparar")
