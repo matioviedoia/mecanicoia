@@ -36,6 +36,11 @@ def validar_python(codigo):
     except SyntaxError as e:
         return False, f"SyntaxError linea {e.lineno}: {e.msg}"
 
+def validar_modulo(codigo_nuevo, codigo_original):
+    if "def ejecutar(" not in codigo_nuevo and "def ejecutar(" in codigo_original:
+        return False, "ERROR: La funcion ejecutar fue eliminada"
+    return True, "OK"
+
 def extraer_codigo(texto):
     if "```python" in texto:
         inicio = texto.find("```python") + 9
@@ -49,7 +54,7 @@ def extraer_codigo(texto):
             return texto[inicio:fin].strip()
     return texto.strip()
 
-def intentar_con_apis(prompt, preguntar_fn, ruta):
+def intentar_con_apis(prompt, preguntar_fn, ruta, codigo_original=""):
     from config import APIS
     apis_orden = ["groq", "gemini", "cerebras", "zai", "ollama"]
     apis_activas = [a for a in apis_orden if a in APIS and APIS[a]["activa"] and (APIS[a]["key"] or a == "ollama")]
@@ -64,6 +69,10 @@ def intentar_con_apis(prompt, preguntar_fn, ruta):
                 valido, msg = validar_python(codigo_candidato)
                 if not valido:
                     continue
+                if codigo_original:
+                    valido, msg = validar_modulo(codigo_candidato, codigo_original)
+                    if not valido:
+                        continue
             return codigo_candidato, api
         except Exception:
             continue
@@ -92,6 +101,7 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
             "Sos un experto en Python. Analizá este codigo y devolvé SOLO el codigo corregido.\n"
             "Corregi todos los errores, bugs y problemas de calidad.\n"
             "Mantene la funcionalidad original intacta.\n"
+            "CRITICO: Si el codigo tiene una funcion llamada ejecutar, DEBES mantenerla exactamente igual.\n"
             "IMPORTANTE: Devolvé SOLO el codigo Python completo entre triple backticks.\n"
             "No agregues explicaciones fuera del codigo.\n\n"
             f"Archivo: {ruta}\n\n"
@@ -99,7 +109,6 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
             "Devolvé SOLO el codigo corregido:"
         )
     else:
-        # Primero analizar para obtener sugerencias
         log.append("Analizando para obtener sugerencias de mejora...")
         prompt_analisis = (
             "Analizá este codigo Python y listá de forma concisa las mejoras que aplicarías.\n"
@@ -114,6 +123,7 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
         prompt = (
             "Sos un experto en Python. Mejorá este codigo aplicando las siguientes sugerencias.\n"
             "Mantene la funcionalidad original pero mejora la calidad, estructura y rendimiento.\n"
+            "CRITICO: Si el codigo tiene una funcion llamada ejecutar, DEBES mantenerla exactamente igual.\n"
             "IMPORTANTE: Devolvé SOLO el codigo Python completo mejorado entre triple backticks.\n"
             "No agregues explicaciones fuera del codigo.\n\n"
             f"Sugerencias a aplicar:\n{sugerencias}\n\n"
@@ -123,7 +133,7 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
         )
 
     log.append("Consultando APIs...")
-    codigo_nuevo, api_usada = intentar_con_apis(prompt, preguntar_fn, ruta)
+    codigo_nuevo, api_usada = intentar_con_apis(prompt, preguntar_fn, ruta, codigo_original)
 
     if not codigo_nuevo:
         return "\n".join(log) + "\nERROR: Ninguna API pudo generar codigo valido"
