@@ -1,55 +1,58 @@
 import os
 import shutil
 import glob
+from typing import List
 
-BASE = "C:/IA/AGENTE/MECANICO"
-BACKUPS = os.path.join(BASE, "memoria", "backups")
+BASE: str = os.environ.get('BASE_DIR', "C:/IA/AGENTE/MECANICO")
+BACKUPS: str = os.path.join(BASE, "memoria", "backups")
 
-def listar_backups(archivo):
+def listar_backups(archivo: str) -> List[str]:
     """
     Lista los backups de un archivo.
-    
-    Parametros:
+
+    Args:
     archivo (str): Ruta del archivo.
-    
-    Retorno:
-    str: Lista de backups del archivo.
+
+    Returns:
+    List[str]: Lista de nombres de los backups del archivo.
     """
+    if not archivo:
+        raise ValueError("El archivo no puede ser vacío")
+
     nombre = os.path.basename(archivo)
     patron = os.path.join(BACKUPS, f"{nombre}.backup_*")
     backups = sorted(glob.glob(patron), reverse=True)
     if not backups:
-        return f"No hay backups de {nombre}"
-    resultado = f"Backups de {nombre}:\n"
-    for i, b in enumerate(backups[:5], start=1):
-        resultado += f"  {i}. {os.path.basename(b)}\n"
-    return resultado
+        raise ValueError(f"No hay backups de {nombre}")
 
-def revertir(archivo):
+    return [os.path.basename(b) for b in backups[:5]]
+
+def revertir(archivo: str) -> str:
     """
     Revierte un archivo a su versión más reciente.
-    
-    Parametros:
+
+    Args:
     archivo (str): Ruta del archivo.
-    
-    Retorno:
+
+    Returns:
     str: Mensaje de confirmación de la reversión.
     """
+    if not archivo:
+        raise ValueError("El archivo no puede ser vacío")
+
     nombre = os.path.basename(archivo)
     patron = os.path.join(BACKUPS, f"{nombre}.backup_*")
     backups = sorted(glob.glob(patron), reverse=True)
     if not backups:
-        return f"ERROR: No hay backups de {nombre}"
+        raise ValueError(f"No hay backups de {nombre}")
+
     backup_reciente = backups[0]
-    if os.path.isabs(archivo):
-        ruta_destino = archivo
-    else:
-        ruta_destino = os.path.join(BASE, archivo)
+    ruta_destino = os.path.abspath(archivo)
     try:
         shutil.copy2(backup_reciente, ruta_destino)
         return f"OK Revertido a: {os.path.basename(backup_reciente)}\nArchivo restaurado: {ruta_destino}"
-    except OSError as e:
-        return f"ERROR: {e}"
+    except Exception as e:
+        raise ValueError(f"Error al revertir el archivo: {e}")
 
 def ejecutar(accion, texto):
     """
@@ -67,5 +70,26 @@ def ejecutar(accion, texto):
     if not archivo:
         return "ERROR: Especifica el archivo. Ej: revertir mecanico.py"
     if "listar" in texto.lower():
-        return listar_backups(archivo)
+        return "\n".join(listar_backups(archivo))
     return revertir(archivo)
+
+def main():
+    accion = input("Ingrese la acción (listar o revertir): ")
+    archivo = input("Ingrese la ruta del archivo: ")
+    if accion.lower() == "listar":
+        try:
+            backups = listar_backups(archivo)
+            print("Backups del archivo:")
+            for backup in backups:
+                print(backup)
+        except ValueError as e:
+            print(e)
+    elif accion.lower() == "revertir":
+        try:
+            resultado = revertir(archivo)
+            print(resultado)
+        except ValueError as e:
+            print(e)
+
+if __name__ == "__main__":
+    main()
