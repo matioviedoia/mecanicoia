@@ -59,6 +59,9 @@ def intentar_con_apis(prompt, preguntar_fn, ruta, codigo_original=""):
     apis_orden = ["groq", "gemini", "cerebras", "zai", "ollama"]
     apis_activas = [a for a in apis_orden if a in APIS and APIS[a]["activa"] and (APIS[a]["key"] or a == "ollama")]
 
+    if not apis_activas:
+        return None, None
+
     for api in apis_activas:
         try:
             respuesta = preguntar_fn(prompt, api=api)
@@ -105,7 +108,7 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
             "IMPORTANTE: Devolvé SOLO el codigo Python completo entre triple backticks.\n"
             "No agregues explicaciones fuera del codigo.\n\n"
             f"Archivo: {ruta}\n\n"
-            f"```python\n{codigo_original[:4000]}\n```\n\n"
+            "```python\n" + codigo_original[:4000] + "\n```\n\n"
             "Devolvé SOLO el codigo corregido:"
         )
     else:
@@ -113,7 +116,7 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
         prompt_analisis = (
             "Analizá este codigo Python y listá de forma concisa las mejoras que aplicarías.\n"
             "Sé específico y técnico.\n\n"
-            f"```python\n{codigo_original[:3000]}\n```"
+            "```python\n" + codigo_original[:3000] + "\n```"
         )
         sugerencias, _ = intentar_con_apis(prompt_analisis, preguntar_fn, "")
         if not sugerencias:
@@ -128,7 +131,7 @@ def procesar(ruta, preguntar_fn, modo="reparar"):
             "No agregues explicaciones fuera del codigo.\n\n"
             f"Sugerencias a aplicar:\n{sugerencias}\n\n"
             f"Archivo: {ruta}\n\n"
-            f"```python\n{codigo_original[:3000]}\n```\n\n"
+            "```python\n" + codigo_original[:3000] + "\n```\n\n"
             "Devolvé SOLO el codigo mejorado:"
         )
 
