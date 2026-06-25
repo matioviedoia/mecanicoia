@@ -3,6 +3,15 @@ import shutil
 import datetime
 
 def listar(ruta):
+    """
+    Lista el contenido de una carpeta.
+
+    Args:
+        ruta (str): La ruta de la carpeta.
+
+    Returns:
+        str: Un mensaje con el contenido de la carpeta.
+    """
     if not os.path.exists(ruta):
         return f"ERROR: Ruta no encontrada: {ruta}"
     items = os.listdir(ruta)
@@ -24,6 +33,16 @@ def listar(ruta):
     return resultado
 
 def buscar(ruta, patron):
+    """
+    Busca archivos que contengan un patrón en una carpeta y sus subcarpetas.
+
+    Args:
+        ruta (str): La ruta de la carpeta.
+        patron (str): El patrón a buscar.
+
+    Returns:
+        str: Un mensaje con los archivos encontrados.
+    """
     if not os.path.exists(ruta):
         return f"ERROR: Ruta no encontrada: {ruta}"
     encontrados = []
@@ -38,6 +57,15 @@ def buscar(ruta, patron):
     return f"Encontrados {len(encontrados)} archivos:\n" + "\n".join(encontrados[:20])
 
 def crear_carpeta(ruta):
+    """
+    Crea una carpeta.
+
+    Args:
+        ruta (str): La ruta de la carpeta.
+
+    Returns:
+        str: Un mensaje con el resultado de la operación.
+    """
     try:
         os.makedirs(ruta, exist_ok=True)
         return f"OK Carpeta creada: {ruta}"
@@ -45,6 +73,16 @@ def crear_carpeta(ruta):
         return f"ERROR: {e}"
 
 def copiar(origen, destino):
+    """
+    Copia un archivo o carpeta.
+
+    Args:
+        origen (str): La ruta del archivo o carpeta original.
+        destino (str): La ruta del archivo o carpeta destino.
+
+    Returns:
+        str: Un mensaje con el resultado de la operación.
+    """
     try:
         if os.path.isdir(origen):
             shutil.copytree(origen, destino)
@@ -55,6 +93,16 @@ def copiar(origen, destino):
         return f"ERROR: {e}"
 
 def mover(origen, destino):
+    """
+    Mueve un archivo o carpeta.
+
+    Args:
+        origen (str): La ruta del archivo o carpeta original.
+        destino (str): La ruta del archivo o carpeta destino.
+
+    Returns:
+        str: Un mensaje con el resultado de la operación.
+    """
     try:
         shutil.move(origen, destino)
         return f"OK Movido: {origen} -> {destino}"
@@ -62,6 +110,15 @@ def mover(origen, destino):
         return f"ERROR: {e}"
 
 def leer(ruta):
+    """
+    Lee el contenido de un archivo.
+
+    Args:
+        ruta (str): La ruta del archivo.
+
+    Returns:
+        str: Un mensaje con el contenido del archivo.
+    """
     if not os.path.exists(ruta):
         return f"ERROR: Archivo no encontrado: {ruta}"
     try:
@@ -75,6 +132,15 @@ def leer(ruta):
         return f"ERROR: {e}"
 
 def info(ruta):
+    """
+    Muestra información sobre un archivo o carpeta.
+
+    Args:
+        ruta (str): La ruta del archivo o carpeta.
+
+    Returns:
+        str: Un mensaje con la información del archivo o carpeta.
+    """
     if not os.path.exists(ruta):
         return f"ERROR: Ruta no encontrada: {ruta}"
     stat = os.stat(ruta)
@@ -85,6 +151,16 @@ def info(ruta):
     return f"Info de {ruta}:\nTipo: {tipo}\nTamanio: {size_str}\nModificado: {modificado}"
 
 def ejecutar(accion, texto):
+    """
+    Ejecuta una acción según el texto ingresado.
+
+    Args:
+        accion (str): La acción a realizar.
+        texto (str): El texto ingresado.
+
+    Returns:
+        str: Un mensaje con el resultado de la acción.
+    """
     palabras = texto.split()
     t = texto.lower()
 
@@ -115,13 +191,16 @@ def ejecutar(accion, texto):
         return "ERROR: Uso: explorar mover origen destino"
 
     elif "leer" in t:
-        ruta = palabras[-1]
-        return leer(ruta)
+        if len(palabras) >= 2:
+            ruta = palabras[-1]
+            return leer(ruta)
+        return "ERROR: Uso: explorar leer C:/ruta"
 
     elif "info" in t:
-        ruta = palabras[-1]
-        return info(ruta)
+        if len(palabras) >= 2:
+            ruta = palabras[-1]
+            return info(ruta)
+        return "ERROR: Uso: explorar info C:/ruta"
 
     else:
-        ruta = palabras[-1] if len(palabras) > 1 else "C:/"
-        return listar(ruta)
+        return "ERROR: Acción no reconocida."
