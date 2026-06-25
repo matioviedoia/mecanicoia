@@ -1,17 +1,28 @@
 import os
 from pathlib import Path
+from typing import Callable
 
-BASE = Path("C:/IA/AGENTE/MECANICO")
+def leer_y_preguntar(ruta: str, pregunta: str, preguntar_fn: Callable[[str], str]) -> str:
+    """
+    Lee el contenido de un archivo y pregunta sobre su contenido.
 
-def leer_y_preguntar(ruta, pregunta, preguntar_fn):
-    """Lee el contenido de un archivo y pregunta sobre su contenido."""
+    Args:
+    ruta (str): La ruta del archivo a leer.
+    pregunta (str): La pregunta sobre el contenido del archivo.
+    preguntar_fn (Callable[[str], str]): La función para realizar la pregunta.
+
+    Returns:
+    str: La respuesta a la pregunta.
+    """
     ruta = Path(ruta)
     if not ruta.exists():
         return f"ERROR: Archivo no encontrado: {ruta}"
     try:
-        with ruta.open("r", encoding="utf-8", errors="ignore") as f:
+        with ruta.open("r", encoding="utf-8", errors="replace") as f:
             contenido = f.read()
-    except Exception as e:
+    except OSError as e:
+        return f"ERROR leyendo archivo: {e}"
+    except UnicodeDecodeError as e:
         return f"ERROR leyendo archivo: {e}"
     lineas = contenido.splitlines()
     if len(lineas) > 200:
@@ -26,10 +37,21 @@ Contenido:
 {contenido_recortado}
 
 Responde directamente a la pregunta basándote en el contenido real del archivo."""
+    if preguntar_fn is None:
+        raise ValueError("La función preguntar_fn no puede ser None")
     return preguntar_fn(prompt)
 
-def ejecutar(accion, texto):
-    """Ejecuta la acción de leer y preguntar sobre un archivo."""
+def ejecutar(accion: str, texto: str) -> str:
+    """
+    Ejecuta la acción de leer y preguntar sobre un archivo.
+
+    Args:
+    accion (str): La acción a realizar.
+    texto (str): El texto con la ruta y la pregunta.
+
+    Returns:
+    str: La respuesta a la pregunta.
+    """
     partes = texto.split(" y ", 1)
     if len(partes) < 2:
         partes = texto.split(" para ", 1)
