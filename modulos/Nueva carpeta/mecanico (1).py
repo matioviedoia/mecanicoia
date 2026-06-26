@@ -324,12 +324,6 @@ while True:
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
-
-                if entrada.lower().startswith("probar"):
-                    if "test_trigger3" in MODULOS:
-                        resultado = MODULOS["test_trigger3"].ejecutar("probar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()

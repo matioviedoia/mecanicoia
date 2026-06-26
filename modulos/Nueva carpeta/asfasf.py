@@ -5,7 +5,6 @@ import datetime
 import ast
 
 BASE = "C:/IA/AGENTE/MECANICO"
-MECANICO_PY = "C:\\IA\\AGENTE\\MECANICO\\mecanico.py"
 
 # ============================================
 # MECANICO - Modulo Autoeditor con IA
@@ -38,7 +37,7 @@ def leer_archivo(archivo):
             return f.read()
     except FileNotFoundError:
         return None
-    except Exception:
+    except Exception as e:
         return None
 
 def escribir_archivo(archivo, contenido):
@@ -61,41 +60,6 @@ def extraer_codigo(texto):
             return texto[inicio:fin].strip()
     return texto.strip()
 
-def agregar_trigger(trigger, nombre_modulo):
-    """Agrega el trigger al mecanico.py automaticamente"""
-    try:
-        with open(MECANICO_PY, "r", encoding="utf-8") as f:
-            contenido = f.read()
-
-        # Verificar si el trigger ya existe
-        if f"entrada.lower().startswith(\"{trigger}\")" in contenido:
-            return f"INFO: Trigger '{trigger}' ya existe en mecanico.py"
-
-        # Bloque del trigger a insertar
-        bloque = (
-            f"\n                if entrada.lower().startswith(\"{trigger}\"):\n"
-            f"                    if \"{nombre_modulo}\" in MODULOS:\n"
-            f"                        resultado = MODULOS[\"{nombre_modulo}\"].ejecutar(\"{trigger}\", entrada)\n"
-            f"                        print(Fore.GREEN + f\"\\nMECANICO: {{resultado}}\")\n"
-            f"                    continue\n"
-        )
-
-        # Insertar antes del bloque de respuesta con IA
-        marca = "                try:\n                    print(Fore.WHITE + \"Pensando...\""
-        if marca not in contenido:
-            return "ERROR: No se encontro el punto de insercion en mecanico.py"
-
-        contenido_nuevo = contenido.replace(marca, bloque + marca, 1)
-
-        hacer_backup("mecanico.py")
-        with open(MECANICO_PY, "w", encoding="utf-8") as f:
-            f.write(contenido_nuevo)
-
-        return f"OK Trigger '{trigger}' agregado a mecanico.py"
-
-    except Exception as e:
-        return f"ERROR agregando trigger: {e}"
-
 def ejecutar_instruccion(json_str):
     try:
         instruccion = json.loads(json_str)
@@ -108,7 +72,6 @@ def ejecutar_instruccion(json_str):
     contenido = instruccion.get("contenido", "")
     backup = instruccion.get("backup", True)
     descripcion = instruccion.get("descripcion", "")
-    trigger = instruccion.get("trigger", "")
 
     if backup and archivo:
         b = hacer_backup(archivo)
@@ -124,12 +87,6 @@ def ejecutar_instruccion(json_str):
         resultado = escribir_archivo(archivo, contenido)
         log.append(resultado)
 
-        # Agregar trigger automaticamente si se especifica
-        if trigger and archivo.startswith("modulos/"):
-            nombre_modulo = os.path.basename(archivo).replace(".py", "")
-            resultado_trigger = agregar_trigger(trigger, nombre_modulo)
-            log.append(resultado_trigger)
-
     elif accion == "leer_archivo":
         contenido_leido = leer_archivo(archivo)
         if contenido_leido:
@@ -143,7 +100,7 @@ def ejecutar_instruccion(json_str):
         try:
             from mecanico import preguntar
             prompt = (
-                "Sos un experto en Python. Modificá este archivo segun la instruccion.\n"
+                "Sos un experto en Python. Modifica este archivo segun la instruccion.\n"
                 f"Instruccion: {descripcion}\n"
                 "Devolvé SOLO el codigo Python completo y modificado entre triple backticks.\n"
                 "No agregues explicaciones.\n\n"
@@ -163,13 +120,6 @@ def ejecutar_instruccion(json_str):
             log.append(resultado)
         except Exception as e:
             return f"ERROR: {e}"
-
-    elif accion == "agregar_trigger":
-        nombre_modulo = instruccion.get("modulo", "")
-        if not trigger or not nombre_modulo:
-            return "ERROR: Se necesita trigger y modulo"
-        resultado = agregar_trigger(trigger, nombre_modulo)
-        log.append(resultado)
 
     log.append("OK Instruccion ejecutada correctamente")
     return "\n".join(log)

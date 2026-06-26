@@ -238,7 +238,7 @@ while True:
 
         elif opcion == "1":
             print(Fore.GREEN + f"\nModo Manual activado. API: {api_actual}")
-            print(Fore.WHITE + "Comandos: 'api' cambiar API | 'recargar' nuevos modulos | 'menu' volver | 'salir' terminar")
+            print(Fore.WHITE + "Comandos: 'api' cambiar API | 'recargar' cargar modulos nuevos | 'menu' volver | 'salir' terminar")
             print(Fore.CYAN + "-" * 55)
 
             while True:
@@ -273,12 +273,6 @@ while True:
                 if entrada.lower().startswith("generar"):
                     if "generador" in MODULOS:
                         resultado = MODULOS["generador"].ejecutar("generar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
-
-                if entrada.lower().startswith("github") or entrada.lower().startswith("scout"):
-                    if "github_scout" in MODULOS:
-                        resultado = MODULOS["github_scout"].ejecutar("scout", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
@@ -324,12 +318,6 @@ while True:
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
-
-                if entrada.lower().startswith("probar"):
-                    if "test_trigger3" in MODULOS:
-                        resultado = MODULOS["test_trigger3"].ejecutar("probar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()
