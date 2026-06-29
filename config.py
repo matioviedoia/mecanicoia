@@ -20,6 +20,7 @@ APIS = {
     "gemini":   {"key": os.getenv("GEMINI_API_KEY"),   "activa": True,  "modelo": "gemini-2.5-flash"},
     "ollama":   {"key": None,                           "activa": True,  "modelo": "gemma3:4b", "url": "http://localhost:11434"},
     "cerebras": {"key": os.getenv("CEREBRAS_API_KEY"), "activa": True, "modelo": "gpt-oss-120b"},
+    "nvidia": {"key": os.getenv("NVIDIA_API_KEY"), "activa": True, "modelo": "nvidia/nemotron-3-super-120b"},
     "zai": {"key": os.getenv("ZAI_API_KEY"), "activa": True, "modelo": "glm-4.7-flash"},
 }
 

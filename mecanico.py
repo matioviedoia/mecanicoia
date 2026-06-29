@@ -30,6 +30,13 @@ def guardar_error(error, contexto=""):
     print(Fore.RED + f"\n[ERROR] {error}")
     print(Fore.YELLOW + f"[LOG] Guardado en {LOG_FILE}")
 
+def registrar_tokens(api, tokens_input, tokens_output):
+    try:
+        from modulos import token_monitor
+        token_monitor.registrar_uso(api, tokens_input, tokens_output)
+    except Exception:
+        pass
+
 def iniciar_ollama():
     try:
         requests.get("http://localhost:11434", timeout=2)
@@ -82,7 +89,7 @@ def recargar_modulos():
                     mod = importlib.import_module(f"modulos.{nombre}")
                     MODULOS[nombre] = mod
                     nuevos.append(nombre)
-                except Exception as e:
+                except Exception:
                     pass
     if nuevos:
         return f"OK Nuevos modulos cargados: {', '.join(nuevos)}"
@@ -100,7 +107,7 @@ def preguntar(prompt, api="auto", modo_consenso=False):
         apis_a_usar = apis_activas
     else:
         apis_a_usar = {}
-        for nombre in ["groq", "gemini", "cerebras", "zai", "ollama"]:
+        for nombre in ["groq", "gemini", "cerebras", "nvidia", "zai", "ollama"]:
             if nombre in apis_activas:
                 apis_a_usar = {nombre: apis_activas[nombre]}
                 break
@@ -115,11 +122,20 @@ def preguntar(prompt, api="auto", modo_consenso=False):
                     max_tokens=2000
                 )
                 resultados[nombre] = respuesta.choices[0].message.content
+                uso = respuesta.usage
+                registrar_tokens(nombre, uso.prompt_tokens, uso.completion_tokens)
+
             elif nombre == "gemini":
                 from google import genai
                 client = genai.Client(api_key=config["key"])
                 respuesta = client.models.generate_content(model=config["modelo"], contents=prompt)
                 resultados[nombre] = respuesta.text
+                try:
+                    meta = respuesta.usage_metadata
+                    registrar_tokens(nombre, meta.prompt_token_count, meta.candidates_token_count)
+                except Exception:
+                    registrar_tokens(nombre, len(prompt)//4, len(respuesta.text)//4)
+
             elif nombre == "cerebras":
                 from cerebras.cloud.sdk import Cerebras
                 client = Cerebras(api_key=config["key"])
@@ -129,18 +145,67 @@ def preguntar(prompt, api="auto", modo_consenso=False):
                     max_tokens=2000
                 )
                 resultados[nombre] = respuesta.choices[0].message.content
+                uso = respuesta.usage
+                registrar_tokens(nombre, uso.prompt_tokens, uso.completion_tokens)
+
+            elif nombre == "nvidia":
+                headers = {
+                    "Authorization": f"Bearer {config['key']}",
+                    "Content-Type": "application/json"
+                }
+                body = {
+                    "model": config["modelo"],
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 2000,
+                    "stream": False
+                }
+                r = requests.post(
+                    "https://integrate.api.nvidia.com/v1/chat/completions",
+                    headers=headers,
+                    json=body,
+                    timeout=60
+                )
+                try:
+                    data = r.json()
+                    contenido = data["choices"][0]["message"]["content"]
+                    if "tchiling" in contenido:
+                        contenido = contenido.split("tchiling")[-1].strip()
+                    resultados[nombre] = contenido
+                    uso = data.get("usage", {})
+                    registrar_tokens(nombre, uso.get("prompt_tokens", 0), uso.get("completion_tokens", 0))
+                except Exception:
+                    resultados[nombre] = r.text[:500]
+                    try:
+                        uso = data.get("usage", {})
+                        registrar_tokens(nombre, uso.get("prompt_tokens", 0), uso.get("completion_tokens", 0))
+                    except Exception:
+                        pass
+
             elif nombre == "zai":
                 headers = {"Authorization": config["key"], "Content-Type": "application/json"}
                 body = {"model": config["modelo"], "messages": [{"role": "user", "content": prompt}], "max_tokens": 2000}
                 r = requests.post("https://open.bigmodel.cn/api/paas/v4/chat/completions", headers=headers, json=body, timeout=30)
-                resultados[nombre] = r.json()["choices"][0]["message"]["content"]
+                data = r.json()
+                resultados[nombre] = data["choices"][0]["message"]["content"]
+                try:
+                    uso = data.get("usage", {})
+                    registrar_tokens(nombre, uso.get("prompt_tokens", 0), uso.get("completion_tokens", 0))
+                except Exception:
+                    pass
+
             elif nombre == "ollama":
                 import ollama as ol
                 respuesta = ol.chat(model=config["modelo"], messages=[{"role": "user", "content": prompt}])
                 resultados[nombre] = respuesta["message"]["content"]
+                try:
+                    registrar_tokens(nombre, respuesta.get("prompt_eval_count", 0), respuesta.get("eval_count", 0))
+                except Exception:
+                    pass
+
         except Exception as e:
             guardar_error(str(e), f"API: {nombre}")
             resultados[nombre] = f"ERROR: {e}"
+
     if not resultados:
         return "ERROR: Todas las APIs fallaron"
     if modo_consenso:
@@ -166,7 +231,7 @@ def mostrar_menu_apis():
     print(Fore.CYAN + "=" * 55)
     print(Fore.CYAN + "   Elegir API activa")
     print(Fore.CYAN + "=" * 55)
-    print(Fore.WHITE + "  0. Auto (groq > gemini > cerebras > zai > ollama)")
+    print(Fore.WHITE + "  0. Auto (groq > gemini > cerebras > nvidia > zai > ollama)")
     apis = list(APIS.items())
     for i, (nombre, config) in enumerate(apis, 1):
         tiene_key = bool(config["key"]) or nombre == "ollama"
@@ -238,7 +303,7 @@ while True:
 
         elif opcion == "1":
             print(Fore.GREEN + f"\nModo Manual activado. API: {api_actual}")
-            print(Fore.WHITE + "Comandos: 'api' cambiar API | 'recargar' nuevos modulos | 'menu' volver | 'salir' terminar")
+            print(Fore.WHITE + "Comandos: 'api' cambiar | 'recargar' modulos | 'menu' volver | 'salir' terminar")
             print(Fore.CYAN + "-" * 55)
 
             while True:
@@ -276,9 +341,27 @@ while True:
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
-                if entrada.lower().startswith("github") or entrada.lower().startswith("scout"):
+                if entrada.lower().startswith("nvidia"):
+                    if "nvidia_selector" in MODULOS:
+                        resultado = MODULOS["nvidia_selector"].ejecutar("nvidia", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("github"):
+                    if "github_reader" in MODULOS:
+                        resultado = MODULOS["github_reader"].ejecutar("github", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("scout"):
                     if "github_scout" in MODULOS:
                         resultado = MODULOS["github_scout"].ejecutar("scout", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("tokens"):
+                    if "token_monitor" in MODULOS:
+                        resultado = MODULOS["token_monitor"].ejecutar("tokens", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
@@ -324,12 +407,6 @@ while True:
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
-
-                if entrada.lower().startswith("probar"):
-                    if "test_trigger3" in MODULOS:
-                        resultado = MODULOS["test_trigger3"].ejecutar("probar", entrada)
-                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
-                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()

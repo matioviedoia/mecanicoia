@@ -18,13 +18,28 @@ KEYWORDS_RELEVANTES = [
     "reparar", "analisis", "agente", "mejora", "codigo"
 ]
 
-TEMAS = [
-    "code repair agent",
-    "auto fix code AI",
-    "code analysis agent",
-    "python code improvement",
-    "static analysis tool"
-]
+TEMAS_POR_CATEGORIA = {
+    "agentes": [
+        "llm agent python autonomous",
+        "ai agent framework python",
+        "autonomous coding agent"
+    ],
+    "analisis": [
+        "python ast code analyzer",
+        "python linter custom rules",
+        "python code quality tool"
+    ],
+    "reparacion": [
+        "python auto fix syntax error",
+        "python code repair tool",
+        "automatic bug fix python"
+    ],
+    "mejora": [
+        "python refactoring tool ai",
+        "python code improvement cli",
+        "python code optimizer"
+    ]
+}
 
 def es_relevante(repo):
     texto = f"{repo.get('name','')} {repo.get('description','')}".lower()
@@ -59,44 +74,59 @@ def traducir_resumir(desc, preguntar_fn):
     except Exception:
         return desc[:60]
 
-def scout_para_mecanico(preguntar_fn):
-    log = []
-    log.append("Buscando repos para MECANICO...\n")
+def scout_por_categoria(categoria, preguntar_fn):
+    temas = TEMAS_POR_CATEGORIA.get(categoria, TEMAS_POR_CATEGORIA["agentes"])
     todos_repos = []
-    for tema in TEMAS:
+    vistos = set()
+    for tema in temas:
         try:
             query_encoded = tema.replace(" ", "+")
             url = f"https://api.github.com/search/repositories?q={query_encoded}&sort=stars&order=desc&per_page=5"
             r = requests.get(url, headers=HEADERS, timeout=10)
             if r.status_code == 200:
                 for repo in r.json().get("items", []):
-                    if repo["full_name"] not in [x["full_name"] for x in todos_repos]:
-                        todos_repos.append(repo)
+                    if repo["full_name"] not in vistos:
+                        vistos.add(repo["full_name"])
+                        if repo.get("description"):
+                            todos_repos.append(repo)
         except Exception:
             continue
-    # Pre-filtro por relevancia
     filtrados = [r for r in todos_repos if es_relevante(r)]
     filtrados.sort(key=lambda x: x["stargazers_count"], reverse=True)
-    top = filtrados[:5]
+    return filtrados[:5]
+
+def scout_para_mecanico(query_usuario, preguntar_fn):
+    log = []
+    # Detectar categoria segun query
+    q = query_usuario.lower()
+    if any(p in q for p in ["agente", "agent", "autonomo", "llm"]):
+        categoria = "agentes"
+    elif any(p in q for p in ["analiz", "lint", "ast", "quality"]):
+        categoria = "analisis"
+    elif any(p in q for p in ["repar", "fix", "bug", "error"]):
+        categoria = "reparacion"
+    elif any(p in q for p in ["mejor", "refactor", "optim"]):
+        categoria = "mejora"
+    else:
+        categoria = "agentes"
+    log.append(f"Buscando repos categoria '{categoria}' para MECANICO...\n")
+    top = scout_por_categoria(categoria, preguntar_fn)
     if not top:
-        return "No se encontraron repos relevantes"
-    log.append(f"Encontrados {len(todos_repos)} repos, {len(filtrados)} relevantes, analizando top 5...\n")
-    # Traducir y resumir con Ollama (barato)
-    resumen_compacto = "REPOS PARA MECANICO:\n\n"
+        log.append("No se encontraron repos relevantes")
+        return "\n".join(log)
+    log.append(f"Encontrados {len(top)} repos relevantes\n")
+    resumen_compacto = f"REPOS CATEGORIA {categoria.upper()}:\n\n"
     for i, repo in enumerate(top, 1):
-        desc_original = repo.get('description') or 'Sin descripcion'
-        desc_es = traducir_resumir(desc_original, preguntar_fn)
+        desc_es = traducir_resumir(repo.get('description', ''), preguntar_fn)
         resumen_compacto += f"{i}. {repo['full_name']} ({repo['stargazers_count']} estrellas)\n"
         resumen_compacto += f"   {desc_es}\n"
         resumen_compacto += f"   {repo['html_url']}\n\n"
     log.append(resumen_compacto)
-    # Analisis final con Gemini (1 sola llamada, texto corto)
     prompt = (
-        "Sos experto en agentes IA Python.\n"
-        "Para cada repo indica en 1 linea que funcionalidad util podria integrarse en MECANICO,\n"
-        "un agente que analiza y repara codigo Python.\n"
-        "Maximo 150 palabras total. Responde en español.\n\n"
-        + resumen_compacto
+        f"Sos experto en agentes IA Python. Categoria analizada: {categoria}.\n"
+        "Para cada repo indica en 1 linea que funcionalidad especifica podria integrarse en MECANICO,\n"
+        "un agente que analiza y repara codigo Python. Maximo 150 palabras. Responde en español.\n\n"
+        + resumen_compacto[:1500]
     )
     log.append("Analizando con Gemini...\n")
     analisis = None
@@ -104,7 +134,7 @@ def scout_para_mecanico(preguntar_fn):
         try:
             resultado = preguntar_fn(prompt, api=api)
             if resultado and "ERROR" not in resultado:
-                analisis = f"[{api}]: {resultado}"
+                analisis = f"[{api}]:\n{resultado}"
                 break
         except Exception:
             continue
@@ -113,9 +143,10 @@ def scout_para_mecanico(preguntar_fn):
 
 def ejecutar(accion, texto):
     t = texto.lower()
-    if "scout" in t or "mecanico" in t or "sugerir" in t:
-        from mecanico import preguntar
-        return scout_para_mecanico(preguntar)
+    from mecanico import preguntar
+    if "scout" in t or "mecanico" in t or "sugerir" in t or any(c in t for c in TEMAS_POR_CATEGORIA.keys()):
+        query = texto.replace("scout", "").strip()
+        return scout_para_mecanico(query, preguntar)
     else:
         palabras = texto.split()
         query = " ".join(palabras[1:]) if len(palabras) > 1 else "code repair"
