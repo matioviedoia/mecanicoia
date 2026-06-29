@@ -4,15 +4,17 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv("C:/IA/AGENTE/MECANICO/.env")
+# Load environment variables from .env file
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
+# Define constant variables
 RUTAS = {
-    "workspace":  "C:/IA/AGENTE/MECANICO/workspace",
-    "proyectos":  "C:/IA/AGENTE/MECANICO/proyectos",
-    "sesiones":   "C:/IA/AGENTE/MECANICO/memoria/sesiones",
-    "errores":    "C:/IA/AGENTE/MECANICO/memoria/errores",
-    "backups":    "C:/IA/AGENTE/MECANICO/memoria/backups",
-    "modulos":    "C:/IA/AGENTE/MECANICO/modulos",
+    "workspace":  os.path.join(os.path.dirname(__file__), "workspace"),
+    "proyectos":  os.path.join(os.path.dirname(__file__), "proyectos"),
+    "sesiones":   os.path.join(os.path.dirname(__file__), "memoria", "sesiones"),
+    "errores":    os.path.join(os.path.dirname(__file__), "memoria", "errores"),
+    "backups":    os.path.join(os.path.dirname(__file__), "memoria", "backups"),
+    "modulos":    os.path.join(os.path.dirname(__file__), "modulos"),
 }
 
 APIS = {
@@ -33,4 +35,4 @@ MODOS = {
 MODO_ACTUAL = "manual"
 GITHUB_REPO = os.getenv("GITHUB_REPO")
 
-BASE = "C:/IA/AGENTE/MECANICO"
+BASE = os.path.dirname(__file__)
