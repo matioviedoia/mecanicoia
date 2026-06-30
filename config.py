@@ -4,26 +4,24 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+load_dotenv("C:/IA/AGENTE/MECANICO/.env")
 
-# Define constant variables
 RUTAS = {
-    "workspace":  os.path.join(os.path.dirname(__file__), "workspace"),
-    "proyectos":  os.path.join(os.path.dirname(__file__), "proyectos"),
-    "sesiones":   os.path.join(os.path.dirname(__file__), "memoria", "sesiones"),
-    "errores":    os.path.join(os.path.dirname(__file__), "memoria", "errores"),
-    "backups":    os.path.join(os.path.dirname(__file__), "memoria", "backups"),
-    "modulos":    os.path.join(os.path.dirname(__file__), "modulos"),
+    "workspace":  "C:/IA/AGENTE/MECANICO/workspace",
+    "proyectos":  "C:/IA/AGENTE/MECANICO/proyectos",
+    "sesiones":   "C:/IA/AGENTE/MECANICO/memoria/sesiones",
+    "errores":    "C:/IA/AGENTE/MECANICO/memoria/errores",
+    "backups":    "C:/IA/AGENTE/MECANICO/memoria/backups",
+    "modulos":    "C:/IA/AGENTE/MECANICO/modulos",
 }
 
 APIS = {
     "groq":     {"key": os.getenv("GROQ_API_KEY"),     "activa": True,  "modelo": "llama-3.3-70b-versatile"},
     "gemini":   {"key": os.getenv("GEMINI_API_KEY"),   "activa": True,  "modelo": "gemini-2.5-flash"},
+    "cerebras": {"key": os.getenv("CEREBRAS_API_KEY"), "activa": True,  "modelo": "gpt-oss-120b"},
+    "nvidia":   {"key": os.getenv("NVIDIA_API_KEY"), "activa": True, "modelo": "moonshotai/kimi-k2.6"},
+    "zai":      {"key": os.getenv("ZAI_API_KEY"),      "activa": True,  "modelo": "glm-4.7-flash"},
     "ollama":   {"key": None,                           "activa": True,  "modelo": "gemma3:4b", "url": "http://localhost:11434"},
-    "cerebras": {"key": os.getenv("CEREBRAS_API_KEY"), "activa": True, "modelo": "gpt-oss-120b"},
-    "nvidia": {"key": os.getenv("NVIDIA_API_KEY"), "activa": True, "modelo": "nvidia/nemotron-3-super-120b"},
-    "zai": {"key": os.getenv("ZAI_API_KEY"), "activa": True, "modelo": "glm-4.7-flash"},
 }
 
 MODOS = {
@@ -34,5 +32,12 @@ MODOS = {
 
 MODO_ACTUAL = "manual"
 GITHUB_REPO = os.getenv("GITHUB_REPO")
+BASE = "C:/IA/AGENTE/MECANICO"
 
-BASE = os.path.dirname(__file__)
+NVIDIA_FALLBACK = [
+    "moonshotai/kimi-k2.6",
+    "mistralai/mistral-large-3-675b-instruct-2512",
+    "nvidia/nemotron-3-super-120b-a12b",
+    "deepseek-ai/deepseek-v4-pro",
+    "meta/llama-3.3-70b-instruct",
+]
