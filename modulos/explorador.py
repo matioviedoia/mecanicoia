@@ -76,7 +76,7 @@ def crear_carpeta(ruta: str) -> str:
         os.makedirs(ruta, exist_ok=True)
         return f"OK Carpeta creada: {ruta}"
     except Exception as e:
-        return f"ERROR: {e}"
+        return f"ERROR: {str(e)}"
 
 def copiar(origen: str, destino: str) -> str:
     """
@@ -96,7 +96,7 @@ def copiar(origen: str, destino: str) -> str:
             shutil.copy2(origen, destino)
         return f"OK Copiado: {origen} -> {destino}"
     except Exception as e:
-        return f"ERROR: {e}"
+        return f"ERROR: {str(e)}"
 
 def mover(origen: str, destino: str) -> str:
     """
@@ -113,7 +113,7 @@ def mover(origen: str, destino: str) -> str:
         shutil.move(origen, destino)
         return f"OK Movido: {origen} -> {destino}"
     except Exception as e:
-        return f"ERROR: {e}"
+        return f"ERROR: {str(e)}"
 
 def ejecutar() -> None:
     print("Ejecutando...")
