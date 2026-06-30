@@ -1,54 +1,33 @@
 import os
 import shutil
-from datetime import datetime
+import datetime
 
-def listar(ruta: str) -> str:
-    """
-    Lista el contenido de una carpeta.
+KEYWORDS = ["explorar", "listar carpeta", "ver carpeta", "buscar archivo"]
 
-    Args:
-        ruta (str): La ruta de la carpeta.
-
-    Returns:
-        str: Un mensaje con el contenido de la carpeta.
-
-    Raises:
-        FileNotFoundError: Si la ruta no existe.
-        PermissionError: Si no se tiene permiso para acceder a la carpeta.
-    """
-    try:
-        items = os.scandir(ruta)
-    except FileNotFoundError:
+def listar(ruta):
+    if not os.path.exists(ruta):
         return f"ERROR: Ruta no encontrada: {ruta}"
-    except PermissionError:
-        return f"ERROR: No se tiene permiso para acceder a la carpeta {ruta}"
-
+    if not os.path.isdir(ruta):
+        return f"ERROR: No es una carpeta: {ruta}"
+    items = os.listdir(ruta)
+    if not items:
+        return f"Carpeta vacia: {ruta}"
+    resultado = f"Contenido de {ruta}:\n"
     carpetas = []
     archivos = []
-    for item in items:
-        if item.is_dir():
-            carpetas.append(f"  [DIR] {item.name}")
+    for item in sorted(items):
+        ruta_item = os.path.join(ruta, item)
+        if os.path.isdir(ruta_item):
+            carpetas.append(f"  [DIR] {item}")
         else:
-            size = item.stat().st_size
+            size = os.path.getsize(ruta_item)
             size_str = f"{size} bytes" if size < 1024 else f"{round(size/1024, 1)} KB"
-            archivos.append(f"  [FILE] {item.name} ({size_str})")
-
-    resultado = f"Contenido de {ruta}:\n"
+            archivos.append(f"  [FILE] {item} ({size_str})")
     resultado += "\n".join(carpetas + archivos)
     resultado += f"\n\nTotal: {len(carpetas)} carpetas, {len(archivos)} archivos"
     return resultado
 
-def buscar(ruta: str, patron: str) -> str:
-    """
-    Busca archivos que contengan un patrón en una carpeta y sus subcarpetas.
-
-    Args:
-        ruta (str): La ruta de la carpeta.
-        patron (str): El patrón a buscar.
-
-    Returns:
-        str: Un mensaje con los archivos encontrados.
-    """
+def buscar(ruta, patron):
     if not os.path.exists(ruta):
         return f"ERROR: Ruta no encontrada: {ruta}"
     encontrados = []
@@ -56,39 +35,19 @@ def buscar(ruta: str, patron: str) -> str:
         dirs[:] = [d for d in dirs if d not in ["__pycache__", ".git", "node_modules"]]
         for archivo in archivos:
             if patron.lower() in archivo.lower():
-                ruta_completa = os.path.join(raiz, archivo)
-                encontrados.append(ruta_completa)
+                encontrados.append(os.path.join(raiz, archivo))
     if not encontrados:
         return f"No se encontro '{patron}' en {ruta}"
     return f"Encontrados {len(encontrados)} archivos:\n" + "\n".join(encontrados[:20])
 
-def crear_carpeta(ruta: str) -> str:
-    """
-    Crea una carpeta.
-
-    Args:
-        ruta (str): La ruta de la carpeta.
-
-    Returns:
-        str: Un mensaje con el resultado de la operación.
-    """
+def crear_carpeta(ruta):
     try:
         os.makedirs(ruta, exist_ok=True)
         return f"OK Carpeta creada: {ruta}"
     except Exception as e:
-        return f"ERROR: {str(e)}"
+        return f"ERROR: {e}"
 
-def copiar(origen: str, destino: str) -> str:
-    """
-    Copia un archivo o carpeta.
-
-    Args:
-        origen (str): La ruta del archivo o carpeta original.
-        destino (str): La ruta del archivo o carpeta destino.
-
-    Returns:
-        str: Un mensaje con el resultado de la operación.
-    """
+def copiar(origen, destino):
     try:
         if os.path.isdir(origen):
             shutil.copytree(origen, destino)
@@ -96,26 +55,68 @@ def copiar(origen: str, destino: str) -> str:
             shutil.copy2(origen, destino)
         return f"OK Copiado: {origen} -> {destino}"
     except Exception as e:
-        return f"ERROR: {str(e)}"
+        return f"ERROR: {e}"
 
-def mover(origen: str, destino: str) -> str:
-    """
-    Mueve un archivo o carpeta.
-
-    Args:
-        origen (str): La ruta del archivo o carpeta original.
-        destino (str): La ruta del archivo o carpeta destino.
-
-    Returns:
-        str: Un mensaje con el resultado de la operación.
-    """
+def mover(origen, destino):
     try:
         shutil.move(origen, destino)
         return f"OK Movido: {origen} -> {destino}"
     except Exception as e:
-        return f"ERROR: {str(e)}"
+        return f"ERROR: {e}"
 
-def ejecutar() -> None:
-    print("Ejecutando...")
-    # Agrega la lógica para ejecutar las funciones anteriores
-    pass
+def leer(ruta):
+    if not os.path.exists(ruta):
+        return f"ERROR: Archivo no encontrado: {ruta}"
+    if os.path.isdir(ruta):
+        return f"ERROR: {ruta} es una carpeta, usa 'explorar listar' en vez de leer"
+    try:
+        with open(ruta, "r", encoding="utf-8", errors="ignore") as f:
+            contenido = f.read()
+        lineas = contenido.split("\n")
+        if len(lineas) > 50:
+            return f"Primeras 50 lineas de {ruta}:\n" + "\n".join(lineas[:50]) + f"\n...({len(lineas)} lineas total)"
+        return f"Contenido de {ruta}:\n{contenido}"
+    except Exception as e:
+        return f"ERROR: {e}"
+
+def info(ruta):
+    if not os.path.exists(ruta):
+        return f"ERROR: Ruta no encontrada: {ruta}"
+    stat = os.stat(ruta)
+    modificado = datetime.datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+    size = stat.st_size
+    size_str = f"{size} bytes" if size < 1024 else f"{round(size/1024/1024, 2)} MB"
+    tipo = "Carpeta" if os.path.isdir(ruta) else "Archivo"
+    return f"Info de {ruta}:\nTipo: {tipo}\nTamanio: {size_str}\nModificado: {modificado}"
+
+def ejecutar(accion, texto):
+    palabras = texto.split()
+    t = texto.lower()
+
+    if "listar" in t or "ver carpeta" in t:
+        ruta = palabras[-1] if len(palabras) > 1 else "C:/"
+        return listar(ruta)
+    elif "buscar" in t:
+        if len(palabras) >= 3:
+            return buscar(palabras[-1], palabras[-2])
+        return "ERROR: Uso: explorar buscar patron C:/ruta"
+    elif "crear carpeta" in t:
+        ruta = palabras[-1]
+        return crear_carpeta(ruta)
+    elif "copiar" in t:
+        if len(palabras) >= 3:
+            return copiar(palabras[-2], palabras[-1])
+        return "ERROR: Uso: explorar copiar origen destino"
+    elif "mover" in t:
+        if len(palabras) >= 3:
+            return mover(palabras[-2], palabras[-1])
+        return "ERROR: Uso: explorar mover origen destino"
+    elif "leer" in t:
+        ruta = palabras[-1]
+        return leer(ruta)
+    elif "info" in t:
+        ruta = palabras[-1]
+        return info(ruta)
+    else:
+        ruta = palabras[-1] if len(palabras) > 1 else "C:/"
+        return listar(ruta)
