@@ -57,9 +57,7 @@ def armar_plan(pedido_usuario, preguntar_fn):
         "IMPORTANTE: si la ruta es una carpeta (no termina en .py ni otra extension), usa 'analizar proyecto <ruta>', NUNCA 'analizar <ruta>' solo para carpetas.\n"
         "Respondé SOLO con un JSON valido con este formato exacto, nada mas:\n"
         '{"pasos": ["comando1 parametro1", "comando2 parametro2"], "explicacion": "breve resumen de lo que se va a hacer"}\n\n'
-        "Si no sabes exactamente que archivo reparar, SIEMPRE agrega primero explorar listar carpeta para ver los archivos disponibles, luego repara el archivo correcto.\n"
-        "Para proyectos Node.js el archivo principal suele ser server.js o index.js. Para Python suele ser main.py o __init__.py.\n"
-        "Si el pedido es ambiguo o falta informacion critica, pedila en el campo explicacion y deja pasos vacio.\n"
+        "Si el pedido es ambiguo o falta informacion (como una ruta), pedila en el campo explicacion y deja pasos vacio.\n"
         "Responde SOLO el JSON, sin texto antes ni despues, sin backticks."
     )
     respuesta, modelo_usado = intentar_modelos_nvidia(prompt, preguntar_fn)
