@@ -2,7 +2,7 @@ import logging
 import platform
 import psutil
 import time
-import os
+from typing import Optional
 
 # Configuración de logging
 logging.basicConfig(
@@ -11,23 +11,20 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-# Palabras clave reconocidas
-PALABRAS_CLAVE_RECONOCIDAS = ["uptime", "tiempo", "corriendo"]
-
 class Sistema:
-    def __init__(self):
-        self.boot_time = None
+    def __init__(self) -> None:
+        self.boot_time: Optional[float] = None
 
-    def obtener_boot_time(self) -> float:
+    def obtener_boot_time(self) -> Optional[float]:
         """Obtiene el tiempo de arranque del sistema"""
         if self.boot_time is None:
             try:
                 self.boot_time = psutil.boot_time()
-            except Exception as e:
+            except psutil.Error as e:
                 logging.error(f"Error al obtener el tiempo de arranque: {str(e)}")
         return self.boot_time
 
-    def calcular_uptime(self) -> str:
+    def calcular_uptime(self) -> Optional[str]:
         """Calcula el tiempo de actividad del sistema"""
         boot_time = self.obtener_boot_time()
         if boot_time is not None:
@@ -41,7 +38,7 @@ class Sistema:
 
     def ejecutar(self, texto: str) -> None:
         """Interpreta el texto y llama a las funciones del módulo"""
-        if any(palabra in texto.lower() for palabra in PALABRAS_CLAVE_RECONOCIDAS):
+        if any(palabra in texto.lower() for palabra in ["uptime", "tiempo", "corriendo"]):
             try:
                 uptime = self.calcular_uptime()
                 if uptime is not None:
@@ -51,7 +48,7 @@ class Sistema:
         else:
             logging.info("Acción no reconocida")
 
-def main():
+def main() -> None:
     sistema = Sistema()
     texto = "¿Cuánto tiempo lleva el sistema en ejecución?"
     sistema.ejecutar(texto)
