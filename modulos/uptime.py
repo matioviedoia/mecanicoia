@@ -5,10 +5,14 @@ import time
 from typing import Optional
 
 # Configuración de logging
+LOG_LEVEL = logging.INFO
+LOG_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
+LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
+    level=LOG_LEVEL,
+    format=LOG_FORMAT,
+    datefmt=LOG_DATE_FORMAT
 )
 
 class Sistema:
