@@ -402,6 +402,12 @@ while True:
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
 
+
+                if entrada.lower().startswith("buscar"):
+                    if "buscador_web" in MODULOS:
+                        resultado = MODULOS["buscador_web"].ejecutar("buscar", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()

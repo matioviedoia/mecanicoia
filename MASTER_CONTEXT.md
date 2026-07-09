@@ -6,37 +6,92 @@ Este archivo contiene toda la información necesaria para que cualquier IA entie
 ```
 📄 .env
 📄 .gitignore
+📄 analizador.py
 📁 apis/
 📄 config.py
+📄 copiar_para_ia.py
+📄 explorador.py
+📄 generar_contexto.py
 📁 logs/
   📁 errors/
     📄 errores.log
 📄 MANUAL_MECANICO.md
-📄 mecanico (1).py
+📄 mecanico.py
 📁 memoria/
   📁 backups/
     📄 analizador.py.backup_20260620_082455
     📄 analizador.py.backup_20260620_083118
     📄 analizador.py.backup_20260620_083128
+    📄 analizador.py.backup_20260624_163759
+    📄 analizador.py.backup_20260624_164141
+    📄 analizador.py.backup_20260624_164330
+    📄 analizador.py.backup_20260624_170041
+    📄 analizador.py.backup_20260625_014006
     📄 autoeditor.py.backup_20260620_083034
+    📄 autoeditor.py.backup_20260624_164600
+    📄 autoeditor.py.backup_20260624_164637
+    📄 autoeditor.py.backup_20260624_165042
+    📄 autoeditor.py.backup_20260624_165113
+    📄 autoeditor.py.backup_20260624_165156
     📄 config.py.backup_20260622_165457
     📄 config.py.backup_20260622_165527
+    📄 CONFIG.PY.backup_20260629_155238
+    📄 explorador.py.backup_20260625_014535
+    📄 explorador.py.backup_20260625_024255
+    📄 explorador.py.backup_20260630_055924
+    📄 git_manager.py.backup_20260625_014633
+    📄 git_manager.py.backup_20260625_021536
+    📄 github_reader.py.backup_20260627_014842
+    📄 github_scout.py.backup_20260627_012930
+    📄 github_scout.py.backup_20260627_015451
+    📄 lector_contexto.py.backup_20260625_014734
+    📄 lector_contexto.py.backup_20260625_021716
+    📄 lector_contexto.py.backup_20260625_024606
     📄 mecanico.py.backup_20260620_080934
     📄 mecanico.py.backup_20260620_083412
     📄 mecanico.py.backup_20260621_212255
     📄 mecanico.py.backup_20260622_165603
+    📄 mecanico.py.backup_20260626_162415
+    📄 mecanico.py.backup_20260628_195143
+    📄 mecanico.py.backup_20260629_073241
+    📄 mecanico.PY.backup_20260629_155132
+    📄 orquestador.py.backup_20260701_025907
+    📄 revertir.py.backup_20260625_014803
+    📄 revertir.py.backup_20260625_021947
+    📄 server.js.backup_20260624_161313
+    📄 server.js.backup_20260624_161440
+    📄 server.js.backup_20260624_161731
   📁 errores/
     📄 errores.log
   📁 sesiones/
+  📄 token_log.json
 📁 modulos/
   📄 analizador.py
   📄 autoeditor.py
   📄 explorador.py
+  📄 generador.py
   📄 git_manager.py
+  📄 github_reader.py
+  📄 github_scout.py
+  📄 lector_contexto.py
+  📁 Nueva carpeta/
+    📄 asfasf.py
+    📄 mecanico (1).py
+    📄 mecanico.py
+    📄 token_monitor.py
+  📄 nvidia_selector.py
+  📄 orquestador.py
   📄 reparador.py
   📄 revertir.py
+  📄 token_monitor.py
 📁 Nueva carpeta/
+  📄 .py
+  📄 aasd.py
+  📄 autoeditor.py
+  📄 files.zip
   📄 mecanico.py
+  📄 ZxZx.py
+📄 orquestador.py
 📁 proyectos/
 📄 scanner_maestro.py
 ```

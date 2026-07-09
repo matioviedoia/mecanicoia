@@ -64,15 +64,15 @@ def armar_plan(pedido_usuario, preguntar_fn):
     )
     respuesta, modelo_usado = intentar_modelos_nvidia(prompt, preguntar_fn)
     if not respuesta:
-        return None, None, "ERROR: Ninguna IA pudo armar el plan"
+        return None, "ERROR: Ninguna IA pudo armar el plan", None
     match = re.search(r'\{.*\}', respuesta, re.DOTALL)
     if not match:
-        return None, None, f"ERROR: No se genero un plan valido.\nRespuesta: {respuesta[:300]}"
+        return None, f"ERROR: No se genero un plan valido.\nRespuesta: {respuesta[:300]}", None
     try:
         plan = json.loads(match.group())
         return plan.get("pasos", []), plan.get("explicacion", ""), modelo_usado
     except json.JSONDecodeError as e:
-        return None, None, f"ERROR: JSON invalido del plan: {e}"
+        return None, f"ERROR: JSON invalido del plan: {e}", None
 
 def ejecutar_plan(pasos, modulos_cargados):
     resultados = []
