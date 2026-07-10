@@ -420,6 +420,18 @@ while True:
                         resultado = MODULOS["reinicio"].ejecutar("reinicio", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
+
+                if entrada.lower().startswith("uptime"):
+                    if "uptime" in MODULOS:
+                        resultado = MODULOS["uptime"].ejecutar("uptime", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("tester"):
+                    if "tester" in MODULOS:
+                        resultado = MODULOS["tester"].ejecutar("tester", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()
