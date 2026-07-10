@@ -414,6 +414,12 @@ while True:
                         resultado = MODULOS["bucle_mejora"].ejecutar("bucle", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
+
+                if entrada.lower().startswith("reinicio"):
+                    if "reinicio" in MODULOS:
+                        resultado = MODULOS["reinicio"].ejecutar("reinicio", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()

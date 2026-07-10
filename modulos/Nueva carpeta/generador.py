@@ -1,7 +1,9 @@
 import os
 import ast
 import importlib
+
 BASE = "C:/IA/AGENTE/MECANICO"
+
 def extraer_codigo(texto):
     if "```python" in texto:
         inicio = texto.find("```python") + 9
@@ -14,12 +16,14 @@ def extraer_codigo(texto):
         if fin > inicio:
             return texto[inicio:fin].strip()
     return texto.strip()
+
 def validar_python(codigo):
     try:
         ast.parse(codigo)
         return True, "OK"
     except SyntaxError as e:
         return False, f"SyntaxError linea {e.lineno}: {e.msg}"
+
 def generar_modulo(descripcion, nombre, preguntar_fn):
     log = []
     log.append(f"Generando modulo: {nombre}")
@@ -72,18 +76,10 @@ def generar_modulo(descripcion, nombre, preguntar_fn):
     log.append(f"Codigo valido generado por {api_usada}")
     log.append(f"Modulo guardado: {ruta}")
     log.append(f"Lineas: {len(codigo_nuevo.splitlines())}")
-
-    nombre_trigger = nombre_archivo[:-3] if nombre_archivo.endswith(".py") else nombre_archivo
-    try:
-        from modulos import autoeditor
-        resultado_trigger = autoeditor.agregar_trigger(nombre_trigger, nombre_trigger)
-        log.append(resultado_trigger)
-    except Exception as e:
-        log.append(f"No se pudo agregar trigger automatico: {e}")
-
     log.append("OK Modulo generado exitosamente")
-    log.append(f"Escribi 'recargar' para cargar el modulo {nombre_archivo}")
+    log.append(f"Reinicia MECANICO para cargar el modulo {nombre_archivo}")
     return "\n".join(log)
+
 def ejecutar(accion, texto):
     partes = texto.split(" como ", 1)
     if len(partes) < 2:
