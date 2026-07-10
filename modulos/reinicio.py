@@ -26,17 +26,10 @@ def ejecutar(accion, texto):
     Interpreta el texto y llama a las funciones del módulo
     """
     try:
-        # Convertimos el texto a minúsculas
-        texto = texto.lower()
-        
-        # Verificamos si el texto contiene alguna palabra clave
-        for keyword in KEYWORDS:
-            if keyword in texto:
-                # Llamamos a la función de reiniciar
-                reiniciar()
-                break
+        reiniciar()
+        return "Reiniciando MECANICO..."
     except Exception as e:
-        print(f"Error al ejecutar la acción: {str(e)}")
+        return f"Error al ejecutar la acción: {str(e)}"
 
 # Llamamos a la función ejecutar
 if __name__ == "__main__":

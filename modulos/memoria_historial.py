@@ -8,17 +8,19 @@ logging.basicConfig(filename='app.log', filemode='a', format='%(asctime)s - %(na
 # Variable KEYWORDS con lista de palabras clave
 KEYWORDS = ["registrar", "ver", "historial"]
 
+# Constante global para la ruta del historial
+HISTORIAL_PATH = "C:/IA/AGENTE/MECANICO/memoria/historial.log"
+
 def registrar_evento(accion, detalle):
     """
     Registra un evento en el historial.log
     """
     try:
-        # Crea el archivo historial.log si no existe
-        if not os.path.exists("historial.log"):
-            open("historial.log", "w").close()
+        # Crea el directorio si no existe
+        os.makedirs(os.path.dirname(HISTORIAL_PATH), exist_ok=True)
         
         # Escribe la fecha, hora, accion y detalle en el archivo
-        with open("historial.log", "a", encoding='utf-8') as archivo:
+        with open(HISTORIAL_PATH, "a", encoding='utf-8') as archivo:
             fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             archivo.write(f"{fecha_hora} - {accion} - {detalle}\n")
     except Exception as e:
@@ -30,9 +32,9 @@ def ver_historial():
     """
     try:
         # Verifica si el archivo historial.log existe
-        if os.path.exists("historial.log"):
+        if os.path.exists(HISTORIAL_PATH):
             # Lee las ultimas 20 lineas del archivo
-            with open("historial.log", "r", encoding='utf-8') as archivo:
+            with open(HISTORIAL_PATH, "r", encoding='utf-8') as archivo:
                 lineas = archivo.readlines()
                 ultimas_lineas = lineas[-20:]
                 return "".join(ultimas_lineas)
@@ -44,9 +46,7 @@ def ver_historial():
 def ejecutar(accion, texto):
     try:
         t = texto.lower()
-        if "ver" in t or "historial" in t and "registrar" not in t:
-            return ver_historial()
-        elif "registrar" in t:
+        if "registrar" in t:
             partes = texto.split("registrar", 1)
             detalle = partes[1].strip() if len(partes) > 1 else texto
             registrar_evento("registro", detalle)
