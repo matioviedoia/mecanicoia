@@ -1,7 +1,9 @@
 import os
 import logging
 from datetime import datetime
-import json
+
+# Configura el logging
+logging.basicConfig(filename='app.log', filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # Variable KEYWORDS con lista de palabras clave
 KEYWORDS = ["registrar", "ver", "historial"]
@@ -16,7 +18,7 @@ def registrar_evento(accion, detalle):
             open("historial.log", "w").close()
         
         # Escribe la fecha, hora, accion y detalle en el archivo
-        with open("historial.log", "a") as archivo:
+        with open("historial.log", "a", encoding='utf-8') as archivo:
             fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             archivo.write(f"{fecha_hora} - {accion} - {detalle}\n")
     except Exception as e:
@@ -30,7 +32,7 @@ def ver_historial():
         # Verifica si el archivo historial.log existe
         if os.path.exists("historial.log"):
             # Lee las ultimas 20 lineas del archivo
-            with open("historial.log", "r") as archivo:
+            with open("historial.log", "r", encoding='utf-8') as archivo:
                 lineas = archivo.readlines()
                 ultimas_lineas = lineas[-20:]
                 return "".join(ultimas_lineas)
