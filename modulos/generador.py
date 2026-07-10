@@ -85,11 +85,9 @@ def generar_modulo(descripcion, nombre, preguntar_fn):
     log.append(f"Escribi 'recargar' para cargar el modulo {nombre_archivo}")
     return "\n".join(log)
 def ejecutar(accion, texto):
-    partes = texto.split(" como ", 1)
-    if len(partes) < 2:
-        partes = texto.split(" llamado ", 1)
-    if len(partes) < 2:
-        return "ERROR: Uso: generar modulo que hace X como nombre_modulo"
+    if "::" not in texto:
+        return "ERROR: Uso: generar descripcion del modulo :: nombre_modulo"
+    partes = texto.split("::", 1)
     descripcion = partes[0].replace("generar ", "").strip()
     nombre = partes[1].strip()
     from mecanico import preguntar

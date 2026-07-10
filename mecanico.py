@@ -432,6 +432,18 @@ while True:
                         resultado = MODULOS["tester"].ejecutar("tester", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
+
+                if entrada.lower().startswith("texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial"):
+                    if "texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial" in MODULOS:
+                        resultado = MODULOS["texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial"].ejecutar("texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
+
+                if entrada.lower().startswith("memoria_historial"):
+                    if "memoria_historial" in MODULOS:
+                        resultado = MODULOS["memoria_historial"].ejecutar("memoria_historial", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()
