@@ -31,9 +31,9 @@ def generar_modulo(descripcion, nombre, preguntar_fn):
         "3. El modulo debe tener una variable KEYWORDS con lista de palabras clave.\n"
         "4. Usa solo librerias de Python estandar o muy comunes (requests, os, json, etc).\n"
         "5. Maneja todos los errores con try/except.\n"
-        "6. Responde SOLO con el codigo Python entre triple backticks.\n\n"
+        "6. Responde SOLO con el codigo Python entre triple backticks.\n"
+        "7. IMPORTANTE: el parametro 'accion' de ejecutar(accion, texto) SIEMPRE llega con el nombre generico del trigger del modulo, NUNCA es una palabra clave especifica. TODA la interpretacion debe basarse UNICAMENTE en buscar palabras clave dentro de 'texto' usando texto.lower() y el operador 'in'. NUNCA compares el valor de accion contra KEYWORDS ni contra ninguna palabra especifica.\n\n"
         f"Descripcion del modulo: {descripcion}\n\n"
-        "Devolvé SOLO el codigo Python completo:"
     )
     from config import APIS
     apis_orden = ["groq", "gemini", "cerebras", "zai", "ollama"]

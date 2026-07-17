@@ -444,6 +444,12 @@ while True:
                         resultado = MODULOS["memoria_historial"].ejecutar("memoria_historial", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
+
+                if entrada.lower().startswith("eliminador"):
+                    if "eliminador" in MODULOS:
+                        resultado = MODULOS["eliminador"].ejecutar("eliminador", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()

@@ -1,5 +1,5 @@
 # MASTER CONTEXT - MECANICO IA
-Generado: 2026-07-01 03:14
+Generado: 2026-07-09 23:03
 
 ## ESTRUCTURA
 ```
@@ -7,20 +7,28 @@ MECANICO/
   .env
   .gitignore
   analizador.py
+  app.log
   config.py
   copiar_para_ia.py
   explorador.py
   generar_contexto.py
+  historial.log
   MANUAL_MECANICO.md
   MASTER_CONTEXT.md
+  MASTER_CONTEXT2.md
   mecanico.py
   orquestador.py
   scanner_maestro.py
+  uptime.py
   apis/
+  ENTORN VISUAL/
+    CARETAS.BAT
+    Nueva carpeta/
   logs/
     errors/
       errores.log
   memoria/
+    historial.log
     token_log.json
     errores/
       errores.log
@@ -28,30 +36,43 @@ MECANICO/
   modulos/
     analizador.py
     autoeditor.py
+    bucle_mejora.py
+    buscador_web.py
     explorador.py
     generador.py
     github_reader.py
     github_scout.py
     git_manager.py
     lector_contexto.py
+    memoria_historial.py
     nvidia_selector.py
     orquestador.py
+    reinicio.py
     reparador.py
     revertir.py
+    tester.py
+    texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial.py
     token_monitor.py
+    uptime.py
     Nueva carpeta/
       asfasf.py
+      generador.py
       mecanico (1).py
       mecanico.py
       token_monitor.py
-  Nueva carpeta/
-    .py
-    aasd.py
-    autoeditor.py
-    files.zip
-    mecanico.py
-    ZxZx.py
   proyectos/
+  visual/
+    assets/
+      fonts/
+      icons/
+    components/
+    css/
+    data/
+    js/
+    logs/
+    pages/
+    templates/
+    themes/
   workspace/
     limpiar.txt
     test.txt
@@ -187,6 +208,118 @@ def agregar_trigger(trigger, nombre_modulo):
     """
 ```
 
+### bucle_mejora.py
+```python
+import os
+
+MAX_INTENTOS = 5
+KEYWORDS = ["mejora hasta", "perfeccionar", "bucle mejora", "iterar"]
+
+def esta_limpio(analisis_texto):
+    t = analisis_texto.lower()
+    señales_ok = ["no se encontraron errores", "no hay errores", "codigo limpio", "sin problemas", "no encontre bugs", "no se detectaron problemas"]
+    if any(s in t for s in señales_ok):
+        return True
+    señales_mal = ["error", "bug", "problema", "falta", "deberia", "mejora posible", "duplicado"]
+    cantidad_señales = sum(1 for s in señales_mal if s in t)
+    return cantidad_señales == 0
+
+def bucle_mejorar_archivo(ruta, preguntar_fn, modulos):
+    if "analizador" not in modulos or "reparador" not in modulos:
+        return "ERROR: faltan modulos analizador o reparador"
+    if not os.path.exists(ruta):
+        return f"ERROR: archivo no encontrado: {ruta}"
+
+    log = []
+    log.append(f"Iniciando bucle de mejora para: {ruta}")
+    log.append(f"Maximo {MAX_INTENTOS} intentos\n")
+
+    for intento in range(1, MAX_INTENTOS + 1):
+        log.append(f"--- Intento {intento}/{MAX_INTENTOS} ---")
+        log.append("Analizando con IA...")
+        analisis = modulos["analizador"].ejecutar("analizar", f"analizar ia {ruta}")
+
+        if esta_limpio(analisis):
+            log.append("OK El archivo esta limpio, sin problemas detectados.")
+            log.append(f"\nEXITO: se logro en {intento} intento(s)")
+            return "\n".join(log)
+
+        log.append(f"Se detectaron problemas:\n{analisis[:400]}\n")
+        log.append("Aplicando mejora...")
+        resultado_mejora = modulos["reparador"].ejecutar("mejorar", f"mejorar {ruta}")
+        log.append(resultado_mejora[:300])
+        log.append("")
+
+        if "ERROR" in resultado_mejora and "Ninguna API" in resultado_mejora:
+            log.append("ERROR: no se pudo generar una mejora valida, deteniendo bucle.")
+            return "\n".join(log)
+
+    log.append(f"\nLIMITE ALCANZADO: se hicieron {MAX_INTENTOS} intentos sin lograr version 100% limpia.")
+    log.
+```
+
+### buscador_web.py
+```python
+import subprocess
+import json
+
+KEYWORDS = ["buscar web", "buscar internet", "buscar en internet", "investigar", "verificar"]
+
+def ejecutar_comando(comando):
+    import os
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+    try:
+        resultado = subprocess.run(comando, capture_output=True, text=True, timeout=30, shell=True, encoding="utf-8", errors="ignore", env=env)
+        return resultado.stdout.strip() if resultado.returncode == 0 else f"ERROR: {resultado.stderr.strip()}"
+    except Exception as e:
+        return f"ERROR: {e}"
+
+def buscar(query, max_resultados=5):
+    comando = f'zero-search "{query}" --json'
+    salida = ejecutar_comando(comando)
+    if salida.startswith("ERROR"):
+        return salida
+    try:
+        data = json.loads(salida)
+        sources = data.get("sources", [])
+        texto = f"Resultados para '{query}':\n\n"
+        for i, r in enumerate(sources[:max_resultados], 1):
+            titulo = r.get("title", "Sin titulo")
+            url = r.get("url", "")
+            snippet = (r.get("snippet", ""))[:200]
+            texto += f"{i}. {titulo}\n   {snippet}\n   {url}\n\n"
+        if not sources:
+            texto += "(sin fuentes encontradas)"
+        return texto
+    except Exception as e:
+        return f"ERROR parseando: {e}\n{salida[:500]}"
+
+def obtener_contexto(query):
+    comando = f'zero-context "{query}"'
+    return ejecutar_comando(comando)
+
+def verificar(afirmacion):
+    comando = f'zero-verify "{afirmacion}" --json'
+    salida = ejecutar_comando(comando)
+    if salida.startswith("ERROR"):
+        return salida
+    try:
+        data = json.loads(salida)
+        return json.dumps(data, indent=2, ensure_ascii=False)[:1500]
+    except Exception:
+        return salida[:1500]
+
+def ejecutar(accion, texto):
+    t = texto.lower()
+    palabras = texto.split()
+    if "verificar" in t:
+        afirmacion = " ".join(palabras[1:])
+        return verificar(afirmacion)
+    elif "contexto" in t:
+        query = " ".join(palabra
+```
+
 ### explorador.py
 ```python
 import os
@@ -254,9 +387,7 @@ def copiar(origen, destino):
 import os
 import ast
 import importlib
-
 BASE = "C:/IA/AGENTE/MECANICO"
-
 def extraer_codigo(texto):
     if "```python" in texto:
         inicio = texto.find("```python") + 9
@@ -269,14 +400,12 @@ def extraer_codigo(texto):
         if fin > inicio:
             return texto[inicio:fin].strip()
     return texto.strip()
-
 def validar_python(codigo):
     try:
         ast.parse(codigo)
         return True, "OK"
     except SyntaxError as e:
         return False, f"SyntaxError linea {e.lineno}: {e.msg}"
-
 def generar_modulo(descripcion, nombre, preguntar_fn):
     log = []
     log.append(f"Generando modulo: {nombre}")
@@ -303,7 +432,7 @@ def generar_modulo(descripcion, nombre, preguntar_fn):
             codigo = extraer_codigo(respuesta)
             if not codigo:
                 continue
-            valido, msg = validar_p
+            valido, msg = validar_pytho
 ```
 
 ### git_manager.py
@@ -465,29 +594,6 @@ KEYWORDS_RELEVANTES = [
     "reparar", "analisis", "agente", "mejora", "codigo"
 ]
 
-TEMAS_POR_CATEGORIA = {
-    "agentes": [
-        "llm agent python autonomous",
-        "ai agent framework python",
-        "autonomous coding agent"
-    ],
-    "analisis": [
-        "python ast code analyzer",
-        "python linter custom rules",
-        "python code quality tool"
-    ],
-    "reparacion": [
-        "python auto fix syntax error",
-        "python code repair tool",
-        "automatic bug fix python"
-    ],
-    "mejora": [
-        "python refactoring tool ai",
-        "python code improvement cli",
-        "python code optimizer"
-    ]
-}
-
 def es_relevante(repo):
     texto = f"{repo.get('name','')} {repo.get('description','')}".lower()
     return any(kw in texto for kw in KEYWORDS_RELEVANTES)
@@ -506,7 +612,25 @@ def buscar_repos(query, max_resultados=5):
         for repo in repos:
             desc = (repo['description'] or 'Sin descripcion')[:80]
             resultado += f"  {repo['full_name']} ({repo['stargazers_count']} estrellas)\n"
-            resultado += f"  {desc}\n  {repo['ht
+            resultado += f"  {desc}\n  {repo['html_url']}\n\n"
+        return resultado
+    except Exception as e:
+        return f"ERROR: {e}"
+
+def traducir_resumir(desc, preguntar_fn):
+    if not desc or desc == "Sin descripcion":
+        return "Sin descripcion"
+    prompt = f"Traducí y resumí en maximo 60 caracteres en español: {desc}"
+    try:
+        resultado = preguntar_fn(prompt, api="ollama")
+        return resultado.strip()[:60]
+    except Exception:
+        return desc[:60]
+
+def scout_para_mecanico(query_usuario, preguntar_fn):
+    query = f"{query_usuario}+language:python"
+    log = []
+    l
 ```
 
 ### lector_contexto.py
@@ -552,6 +676,67 @@ except Exception as e:
 # 9. Nombre de funciones: La función `leer_y_preguntar` ha sido renombrada a `leer_archivo_y_realizar_pregunta`
 # para mayor claridad, siguiendo la sugerencia. La función `ejecutar` ha sido actualizada
 # internamente para llamar a esta nu
+```
+
+### memoria_historial.py
+```python
+import os
+import logging
+from datetime import datetime
+
+# Configura el logging
+logging.basicConfig(filename='app.log', filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# Variable KEYWORDS con lista de palabras clave
+KEYWORDS = ["registrar", "ver", "historial"]
+
+# Constante global para la ruta del historial
+HISTORIAL_PATH = "C:/IA/AGENTE/MECANICO/memoria/historial.log"
+
+def registrar_evento(accion, detalle):
+    """
+    Registra un evento en el historial.log
+    """
+    try:
+        # Crea el directorio si no existe
+        os.makedirs(os.path.dirname(HISTORIAL_PATH), exist_ok=True)
+        
+        # Escribe la fecha, hora, accion y detalle en el archivo
+        with open(HISTORIAL_PATH, "a", encoding='utf-8') as archivo:
+            fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            archivo.write(f"{fecha_hora} - {accion} - {detalle}\n")
+    except Exception as e:
+        logging.error(f"Error al registrar evento: {e}")
+
+def ver_historial():
+    """
+    Lee las ultimas 20 lineas del historial.log
+    """
+    try:
+        # Verifica si el archivo historial.log existe
+        if os.path.exists(HISTORIAL_PATH):
+            # Lee las ultimas 20 lineas del archivo
+            with open(HISTORIAL_PATH, "r", encoding='utf-8') as archivo:
+                lineas = archivo.readlines()
+                ultimas_lineas = lineas[-20:]
+                return "".join(ultimas_lineas)
+        else:
+            return "No hay historial registrado"
+    except Exception as e:
+        logging.error(f"Error al ver historial: {e}")
+
+def ejecutar(accion, texto):
+    try:
+        t = texto.lower()
+        if "registrar" in t:
+            partes = texto.split("registrar", 1)
+            detalle = partes[1].strip() if len(partes) > 1 else texto
+            registrar_evento("registro", detalle)
+            return f"Evento registrado: {detalle}"
+        else:
+            return ver_historial()
+    except Exception as e:
+        logging.error(f"Erro
 ```
 
 ### nvidia_selector.py
@@ -657,6 +842,48 @@ def intentar_modelos_nvidia(prompt, preguntar_fn):
             contenido = data["choices"][
 ```
 
+### reinicio.py
+```python
+import os
+import sys
+import subprocess
+
+# Lista de palabras clave
+KEYWORDS = ["reiniciar", "restart"]
+
+def reiniciar():
+    """
+    Reinicia el proceso actual y vuelve a lanzar python mecanico.py
+    """
+    try:
+        # Obtenemos el nombre del archivo actual
+        archivo_actual = sys.argv[0]
+        
+        # Ejecutamos el comando para reiniciar el proceso
+        subprocess.Popen([sys.executable, archivo_actual])
+        
+        # Matamos el proceso actual
+        os._exit(0)
+    except Exception as e:
+        print(f"Error al reiniciar: {str(e)}")
+
+def ejecutar(accion, texto):
+    """
+    Interpreta el texto y llama a las funciones del módulo
+    """
+    try:
+        reiniciar()
+        return "Reiniciando MECANICO..."
+    except Exception as e:
+        return f"Error al ejecutar la acción: {str(e)}"
+
+# Llamamos a la función ejecutar
+if __name__ == "__main__":
+    # Simulamos una llamada a la función ejecutar
+    ejecutar("reiniciar", "reiniciar el proceso")
+
+```
+
 ### reparador.py
 ```python
 import os
@@ -733,6 +960,7 @@ def intentar_con_apis(prompt, preguntar_fn, ruta, codigo_original=""):
 import os
 import shutil
 import glob
+import re
 from typing import List
 
 BASE: str = os.environ.get('BASE_DIR', "C:/IA/AGENTE/MECANICO")
@@ -759,12 +987,13 @@ def listar_backups(archivo: str) -> List[str]:
 
     return [os.path.basename(b) for b in backups[:5]]
 
-def revertir(archivo: str) -> str:
+def revertir(archivo: str, indice: int = 0) -> str:
     """
     Revierte un archivo a su versión más reciente.
 
     Args:
     archivo (str): Ruta del archivo.
+    indice (int): Indice del backup a utilizar (0 para el más reciente).
 
     Returns:
     str: Mensaje de confirmación de la reversión.
@@ -772,17 +1001,23 @@ def revertir(archivo: str) -> str:
     if not archivo:
         raise ValueError("El archivo no puede ser vacío")
 
+    if indice < 0:
+        raise ValueError("El indice no puede ser negativo")
+
     nombre = os.path.basename(archivo)
     patron = os.path.join(BACKUPS, f"{nombre}.backup_*")
     backups = sorted(glob.glob(patron), reverse=True)
     if not backups:
         raise ValueError(f"No hay backups de {nombre}")
 
-    backup_reciente = backups[0]
+    if indice == 0 or indice > len(backups):
+        indice = 0
+
+    backup_seleccionado = backups[indice]
     ruta_destino = os.path.abspath(archivo)
     try:
-        shutil.copy2(backup_reciente, ruta_destino)
-        return f"OK Revertido a: {os.path.basename(backup_reciente)}\nArchivo restaurado: {ruta_destino}"
+        shutil.copy2(backup_seleccionado, ruta_destino)
+        return f"OK Revertido a: {os.path.basename(backup_seleccionado)}\nArchivo restaurado: {ruta_destino}"
     except Exception as e:
         raise ValueError(f"Error al revertir el archivo: {e}")
 
@@ -791,16 +1026,138 @@ def ejecutar(accion, texto):
     Ejecuta una acción sobre un archivo.
     
     Parametros:
-    accion (str): Acción a realizar.
-    texto (str): Texto que contiene la ruta del archivo.
+    accion (str): A
+```
+
+### tester.py
+```python
+import importlib.util
+import inspect
+import os
+import traceback
+
+KEYWORDS = ['mechanico', 'modulo']
+
+def verificar_estructura(ruta_archivo):
+    try:
+        spec = importlib.util.spec_from_file_location('modulo', ruta_archivo)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
+        
+        if not hasattr(modulo, 'KEYWORDS') or not isinstance(modulo.KEYWORDS, list):
+            return False, "La variable KEYWORDS no existe o no es una lista"
+        
+        if not hasattr(modulo, 'ejecutar') or not inspect.isfunction(modulo.ejecutar):
+            return False, "La función ejecutar no existe o no es una función"
+        
+        if len(inspect.signature(modulo.ejecutar).parameters) != 2:
+            return False, "La función ejecutar no acepta 2 parámetros posicionales"
+        
+        return True, ""
     
-    Retorno:
-    str: Mensaje de confirmación o error.
-    """
+    except Exception as e:
+        return False, str(e)
+
+def probar_ejecucion(ruta_archivo):
+    try:
+        spec = importlib.util.spec_from_file_location('modulo', ruta_archivo)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
+        
+        try:
+            resultado = modulo.ejecutar('prueba', 'texto de prueba')
+            return True, str(resultado)
+        except Exception as e:
+            return False, str(e)
+    
+    except Exception as e:
+        return False, str(e)
+
+def ejecutar(accion, texto):
     palabras = texto.split()
-    archivo = palabras[-1] if len(palabras) > 1 else ""
-    if not archivo:
-        return
+    ruta_archivo = palabras[-1] if palabras else texto
+    estructura_valida, mensaje_estructura = verificar_estructura(ruta_archivo)
+    
+    if not estructura_valida:
+        return f"Error de estructura: {mensaje_estructura}"
+    
+    ejecucion_valida, mensaje_ejecucion = probar_ejecucion(ruta_archivo)
+    
+    if not ejecucion_valida:
+        return f"Error de ejecución: {mensaje_ejecucion}"
+    
+    return f"Pasó la prueba de estructura y ejecución. Resultado: {mensaje_ejecucion}"
+
+```
+
+### texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial.py
+```python
+import os
+import datetime
+from os import path
+
+# Lista de palabras clave
+KEYWORDS = ["registrar", "evento", "ver", "historial"]
+
+def registrar_evento(accion, detalle):
+    """
+    Registra un evento en el historial.
+    
+    :param accion: La accion realizada
+    :param detalle: El detalle del evento
+    """
+    try:
+        # Obtener la fecha y hora actuales
+        fecha_hora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Abrir el archivo de historial en modo append
+        with open("historial.log", "a") as archivo:
+            # Escribir la linea con la fecha y hora, accion y detalle
+            archivo.write(f"{fecha_hora} - {accion}: {detalle}\n")
+    except Exception as e:
+        print(f"Error al registrar evento: {e}")
+
+def ver_historial():
+    """
+    Lee las ultimas 20 lineas del historial.
+    
+    :return: Las ultimas 20 lineas del historial
+    """
+    try:
+        # Verificar si el archivo de historial existe
+        if not path.exists("historial.log"):
+            return []
+        
+        # Abrir el archivo de historial en modo read
+        with open("historial.log", "r") as archivo:
+            # Leer todas las lineas del archivo
+            lineas = archivo.readlines()
+            
+            # Devolver las ultimas 20 lineas
+            return lineas[-20:]
+    except Exception as e:
+        print(f"Error al ver historial: {e}")
+
+def ejecutar(accion, texto):
+    """
+    Interpreta el texto y llama a las funciones del modulo.
+    
+    :param accion: La accion a realizar
+    :param texto: El texto a interpretar
+    """
+    try:
+        # Interpretar el texto
+        if accion == "registrar":
+            # Registrar un evento
+            detalle = texto
+            registrar_evento(accion, detalle)
+        elif accion == "ver":
+            # Ver el historial
+            historial = ver_historial()
+            for linea in historial:
+                print(linea.strip())
+        else:
+            print("Accion no reconocida
 ```
 
 ### token_monitor.py
@@ -855,6 +1212,71 @@ def calcular_costo(api, tokens_input, tokens_output):
     limites = LIMITES.get(api, {})
     precio_in = limites.get("precio_input", 0)
     preci
+```
+
+### uptime.py
+```python
+import logging
+import platform
+import psutil
+import time
+from typing import Optional
+
+# Configuración de logging
+LOG_LEVEL = logging.INFO
+LOG_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
+LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+logging.basicConfig(
+    level=LOG_LEVEL,
+    format=LOG_FORMAT,
+    datefmt=LOG_DATE_FORMAT
+)
+
+class Sistema:
+    def __init__(self) -> None:
+        self.boot_time: Optional[float] = None
+
+    def obtener_boot_time(self) -> Optional[float]:
+        """Obtiene el tiempo de arranque del sistema"""
+        if self.boot_time is None:
+            try:
+                self.boot_time = psutil.boot_time()
+            except psutil.Error as e:
+                logging.error(f"Error al obtener el tiempo de arranque: {str(e)}")
+        return self.boot_time
+
+    def calcular_uptime(self) -> Optional[str]:
+        """Calcula el tiempo de actividad del sistema"""
+        boot_time = self.obtener_boot_time()
+        if boot_time is not None:
+            uptime = time.time() - boot_time
+            horas = int(uptime // 3600)
+            minutos = int((uptime % 3600) // 60)
+            segundos = int(uptime % 60)
+            return f"{horas} horas, {minutos} minutos y {segundos} segundos"
+        else:
+            return None
+
+    def ejecutar(self, texto: str) -> None:
+        """Interpreta el texto y llama a las funciones del módulo"""
+        if any(palabra in texto.lower() for palabra in ["uptime", "tiempo", "corriendo"]):
+            try:
+                uptime = self.calcular_uptime()
+                if uptime is not None:
+                    logging.info(f"El sistema lleva {uptime} en ejecución")
+            except Exception as e:
+                logging.error(f"Error al ejecutar la acción: {str(e)}")
+        else:
+            logging.info("Acción no reconocida")
+
+def main() -> None:
+    sistema = Sistema()
+    texto = "¿Cuánto tiempo lleva el sistema en ejecución?"
+    sistema.ejecutar(texto)
+
+if __name__ == "__main__":
+    main()
 ```
 
 ## CONFIG
@@ -921,6 +1343,13 @@ NVIDIA_FALLBACK = [
 - if entrada.lower().startswith("leer"):
 - if entrada.lower().startswith("explorar"):
 - if entrada.lower().startswith("git"):
+- if entrada.lower().startswith("buscar"):
+- if entrada.lower().startswith("bucle"):
+- if entrada.lower().startswith("reinicio"):
+- if entrada.lower().startswith("uptime"):
+- if entrada.lower().startswith("tester"):
+- if entrada.lower().startswith("texto,_creando_la_carpeta_memoria_si_no_existe_llamado_memoria_historial"):
+- if entrada.lower().startswith("memoria_historial"):
 
 ## APIS CONFIGURADAS
 - groq: llama-3.3-70b-versatile
