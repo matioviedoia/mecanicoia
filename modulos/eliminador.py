@@ -1,12 +1,16 @@
 import os
 import shutil
 import datetime
-import json
+import logging
 
-# Lista de palabras clave
+# Configuración del log
+logging.basicConfig(level=logging.ERROR)
+
+# Constantes
 KEYWORDS = ["borrar", "eliminar", "delete"]
+FECHA_HORA_FORMATO = "%Y%m%d%H%M%S"
 
-def crear_backup(archivo):
+def crear_backup(archivo: str) -> str:
     """
     Crea una copia de seguridad de un archivo.
     
@@ -15,10 +19,14 @@ def crear_backup(archivo):
     
     Returns:
         str: Ruta del archivo de backup.
+    
+    Raises:
+        FileNotFoundError: Si el archivo no existe.
+        PermissionError: Si no se tiene permiso para leer el archivo.
     """
     try:
         # Obtener la fecha y hora actuales
-        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        timestamp = datetime.datetime.now().strftime(FECHA_HORA_FORMATO)
         
         # Crear la ruta del archivo de backup
         nombre_archivo = os.path.basename(archivo)
@@ -35,11 +43,17 @@ def crear_backup(archivo):
         
         return ruta_backup
     
+    except FileNotFoundError:
+        logging.error(f"El archivo {archivo} no existe")
+        raise
+    except PermissionError:
+        logging.error(f"No se tiene permiso para leer el archivo {archivo}")
+        raise
     except Exception as e:
-        print(f"Error al crear backup: {e}")
-        return None
+        logging.error(f"Error al crear backup: {e}")
+        raise
 
-def borrar_archivo(archivo):
+def borrar_archivo(archivo: str) -> str:
     """
     Borra un archivo de forma segura.
     
@@ -48,16 +62,17 @@ def borrar_archivo(archivo):
     
     Returns:
         str: Confirmación del backup creado y la ruta borrada.
+    
+    Raises:
+        FileNotFoundError: Si el archivo no existe.
     """
     try:
         # Verificar que el archivo exista
         if not os.path.exists(archivo):
-            return f"Error: El archivo {archivo} no existe."
+            raise FileNotFoundError(f"El archivo {archivo} no existe")
         
         # Crear una copia de seguridad del archivo
         ruta_backup = crear_backup(archivo)
-        if ruta_backup is None:
-            return "Error al crear backup."
         
         # Borrar el archivo original
         os.remove(archivo)
@@ -65,10 +80,10 @@ def borrar_archivo(archivo):
         return f"Archivo {archivo} borrado con éxito. Backup creado en {ruta_backup}"
     
     except Exception as e:
-        print(f"Error al borrar archivo: {e}")
-        return "Error al borrar archivo."
+        logging.error(f"Error al borrar archivo: {e}")
+        raise
 
-def ejecutar(accion, texto):
+def ejecutar(accion: str, texto: str) -> str:
     """
     Interpretar el texto y llamar a las funciones del módulo.
     
@@ -93,5 +108,5 @@ def ejecutar(accion, texto):
         return resultado
     
     except Exception as e:
-        print(f"Error al ejecutar acción: {e}")
+        logging.error(f"Error al ejecutar acción: {e}")
         return "Error al ejecutar acción."
