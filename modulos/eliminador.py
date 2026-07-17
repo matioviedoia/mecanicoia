@@ -4,11 +4,23 @@ import datetime
 import logging
 
 # Configuración del log
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 
 # Constantes
 KEYWORDS = ["borrar", "eliminar", "delete"]
 FECHA_HORA_FORMATO = "%Y%m%d%H%M%S"
+
+def crear_directorio(directorio: str) -> None:
+    """
+    Crea un directorio si no existe.
+    
+    Args:
+        directorio (str): Ruta del directorio a crear.
+    """
+    try:
+        os.makedirs(directorio, exist_ok=True)
+    except OSError as e:
+        logging.error(f"Error al crear directorio {directorio}: {e}")
 
 def crear_backup(archivo: str) -> str:
     """
@@ -36,7 +48,7 @@ def crear_backup(archivo: str) -> str:
         
         # Crear el directorio de backups si no existe
         directorio_backups = os.path.dirname(ruta_backup)
-        os.makedirs(directorio_backups, exist_ok=True)
+        crear_directorio(directorio_backups)
         
         # Copiar el archivo original al archivo de backup
         shutil.copy2(archivo, ruta_backup)
@@ -94,19 +106,13 @@ def ejecutar(accion: str, texto: str) -> str:
     Returns:
         str: Resultado de la acción.
     """
+    if accion.lower() not in KEYWORDS:
+        return "Acción no soportada."
+
+    # Completar la lógica para obtener la ruta del archivo a borrar
+    archivo = texto
     try:
-        # Verificar que la acción sea borrar
-        if accion.lower() not in KEYWORDS:
-            return "Acción no soportada."
-        
-        # Obtener la ruta del archivo a borrar
-        archivo = texto.strip()
-        
-        # Borrar el archivo
-        resultado = borrar_archivo(archivo)
-        
-        return resultado
-    
+        return borrar_archivo(archivo)
     except Exception as e:
         logging.error(f"Error al ejecutar acción: {e}")
-        return "Error al ejecutar acción."
+        raise
