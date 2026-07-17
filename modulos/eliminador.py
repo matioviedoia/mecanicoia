@@ -28,11 +28,10 @@ def crear_backup(archivo):
         
         # Crear el directorio de backups si no existe
         directorio_backups = os.path.dirname(ruta_backup)
-        if not os.path.exists(directorio_backups):
-            os.makedirs(directorio_backups)
+        os.makedirs(directorio_backups, exist_ok=True)
         
         # Copiar el archivo original al archivo de backup
-        shutil.copy(archivo, ruta_backup)
+        shutil.copy2(archivo, ruta_backup)
         
         return ruta_backup
     
