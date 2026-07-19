@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Constantes
-KEYWORDS = ["borrar", "eliminar", "delete"]
+KEYWORDS = ["borrar", "eliminar", "delete", "eliminador"]
 FECHA_HORA_FORMATO = "%Y%m%d%H%M%S"
 
 def crear_directorio(directorio: str) -> None:
@@ -106,11 +106,11 @@ def ejecutar(accion: str, texto: str) -> str:
     Returns:
         str: Resultado de la acción.
     """
-    if accion.lower() not in KEYWORDS:
+    if not any(palabra in texto.lower() for palabra in KEYWORDS):
         return "Acción no soportada."
 
     # Completar la lógica para obtener la ruta del archivo a borrar
-    archivo = texto
+    archivo = texto.split()[-1]
     try:
         return borrar_archivo(archivo)
     except Exception as e:

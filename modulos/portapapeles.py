@@ -1,5 +1,6 @@
 import pyperclip
 import json
+import os
 
 # Lista de palabras clave para el modulo
 KEYWORDS = ['copiar', 'portapapeles', 'clipboard']
@@ -12,13 +13,13 @@ def copiar_a_portapapeles(texto):
         texto (str): El texto a copiar.
     
     Returns:
-        None
+        str: Mensaje de confirmación del copiado.
     """
     try:
         pyperclip.copy(texto)
-        print("Texto copiado al portapapeles con éxito.")
+        return "Ya tenes en tu portapapeles el texto, pegalo con Ctrl mas V."
     except Exception as e:
-        print(f"Error al copiar texto al portapapeles: {str(e)}")
+        return f"Error al copiar texto al portapapeles: {str(e)}"
 
 def ejecutar(accion, texto):
     """
@@ -29,15 +30,21 @@ def ejecutar(accion, texto):
         texto (str): El texto a interpretar.
     
     Returns:
-        None
+        str: Mensaje de resultado de la operación.
     """
     try:
         # Buscar palabras clave en el texto
         if 'copiar' in texto.lower() or 'portapapeles' in texto.lower() or 'clipboard' in texto.lower():
             # Extraer el texto a copiar del mensaje
-            texto_a_copiar = texto.split(' ', 1)[1] if len(texto.split(' ', 1)) > 1 else ''
-            copiar_a_portapapeles(texto_a_copiar)
+            palabras = texto.split()
+            texto_a_copiar = palabras[-1]
+            if os.path.exists(texto_a_copiar):
+                with open(texto_a_copiar, 'r', encoding='utf-8') as archivo:
+                    contenido_del_archivo = archivo.read()
+                    return copiar_a_portapapeles(contenido_del_archivo)
+            else:
+                return copiar_a_portapapeles(texto_a_copiar)
         else:
-            print("No se encontraron palabras clave en el texto.")
+            return "No se encontraron palabras clave en el texto."
     except Exception as e:
-        print(f"Error al interpretar el texto: {str(e)}")
+        return f"Error al interpretar el texto: {str(e)}"
