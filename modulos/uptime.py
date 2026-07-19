@@ -42,6 +42,10 @@ class Sistema:
 
     def ejecutar(self, texto: str) -> None:
         """Interpreta el texto y llama a las funciones del módulo"""
+        if not texto:
+            logging.error("Texto de entrada vacío")
+            return
+
         if any(palabra in texto.lower() for palabra in ["uptime", "tiempo", "corriendo"]):
             try:
                 uptime = self.calcular_uptime()
