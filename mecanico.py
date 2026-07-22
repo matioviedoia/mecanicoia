@@ -456,6 +456,12 @@ while True:
                         resultado = MODULOS["portapapeles"].ejecutar("portapapeles", entrada)
                         print(Fore.GREEN + f"\nMECANICO: {resultado}")
                     continue
+
+                if entrada.lower().startswith("clasificador_proyecto"):
+                    if "clasificador_proyecto" in MODULOS:
+                        resultado = MODULOS["clasificador_proyecto"].ejecutar("clasificador_proyecto", entrada)
+                        print(Fore.GREEN + f"\nMECANICO: {resultado}")
+                    continue
                 try:
                     print(Fore.WHITE + "Pensando...", end="", flush=True)
                     inicio = time.time()
