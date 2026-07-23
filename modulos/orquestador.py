@@ -14,7 +14,8 @@ MODULOS_DISPONIBLES = {
     "generar": "generar <descripcion> como <nombre> - crea un modulo nuevo desde cero",
     "github": "github leer <url> - analiza un repo de GitHub e implementa si es chico",
     "scout": "scout <tema> - busca repos de GitHub utiles",
-    "tokens": "tokens / tokens historial / tokens limites - consumo de las APIs"
+    "tokens": "tokens / tokens historial / tokens limites - consumo de las APIs",
+    "creador_proyecto": "creador_proyecto descripcion del proyecto nombre_del_proyecto - crea un PROYECTO NUEVO EXTERNO completo desde cero como un bot script o app en la carpeta proyectos_generados, usar este para pedidos de crear bots scripts o programas nuevos, es diferente de generar que solo crea modulos internos de MECANICO"
 }
 
 def intentar_modelos_nvidia(prompt, preguntar_fn):
@@ -102,6 +103,8 @@ def ejecutar_plan(pasos, modulos_cargados):
                 resultado = modulos_cargados["github_scout"].ejecutar("scout", paso)
             elif paso_lower.startswith("tokens") and "token_monitor" in modulos_cargados:
                 resultado = modulos_cargados["token_monitor"].ejecutar("tokens", paso)
+            elif paso_lower.startswith("creador_proyecto") and "creador_proyecto" in modulos_cargados:
+                resultado = modulos_cargados["creador_proyecto"].ejecutar("creador_proyecto", paso)
             else:
                 resultado = f"No se reconoce el comando: {paso}"
         except Exception as e:
